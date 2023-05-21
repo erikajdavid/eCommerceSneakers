@@ -125,14 +125,21 @@ nav ul {
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
     height: 30vh;
     position: fixed;
-    right: 50px;
-    display: none;
+    top: 9vh;
+    left: 100%;
+    z-index: 100;
+    transition: 0.5s ease-in-out;
+
     .yourCart {
         padding: 1rem;
         font-weight: 700;
         border-bottom: 1px solid $grayBlue;
 
     }
+}
+
+.cartReview.activated {
+    left: 75%;
 }
 
 .checkoutBtn {
