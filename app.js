@@ -14,7 +14,6 @@ const cartReviewEl = document.querySelector('.cartReview')
 const cartEl = document.querySelector('.cart')
 //add eventlistener
 cartEl.addEventListener('click', function(){
-    console.log('cart clicked');
     cartEl.classList.toggle('activated');
     cartReviewEl.classList.toggle('activated');
 });
