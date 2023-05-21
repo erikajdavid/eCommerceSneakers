@@ -119,6 +119,10 @@ nav ul {
 //active cart
 
 .cartReview {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     width: 350px;
     background-color: $white;
     border-radius: 10px;
@@ -129,8 +133,10 @@ nav ul {
     left: 100%;
     z-index: 100;
     transition: 0.5s ease-in-out;
-
+    padding-bottom: 1rem;
     .yourCart {
+        width: 100%;
+        text-align: left;
         padding: 1rem;
         font-weight: 700;
         border-bottom: 1px solid $grayBlue;
@@ -145,13 +151,14 @@ nav ul {
 .checkoutBtn {
     background-color: $orange;
     color: $white;
-    border: none;
     width: 90%;
+    border: none;
     padding: 1rem 0;
     border-radius: 10px;
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.05rem; 
+    text-align: center;
 
 }
 
