@@ -29,7 +29,8 @@ html {
     font-size: 16px;
 }
 
-body {
+body,
+p {
     padding: 0;
     margin: 0;
 }
@@ -46,11 +47,15 @@ ul {
 
 //navigation
 
+header {
+    height: 10vh;
+}
+
 header .wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: $darkGrayBlue;
+    border-bottom: 1px solid $grayBlue;
 }
 
 .headerLeft, 
@@ -65,7 +70,6 @@ nav ul {
     li {
         padding: 1.5rem;
         color: hsl(220, 14%, 75%);
-        font-weight: 500;
     }
 }
 
@@ -74,3 +78,68 @@ nav ul {
     margin-left: 2rem;
 
 }
+
+//main 
+
+main {
+    height: 85vh;
+}
+
+section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imageContainer,
+.textContainer {
+    width: 50%;
+    padding: 4rem;
+}
+
+.imageContainer img {
+    width: 100%;
+}
+
+.thumbnailContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    img {
+        width: 20%;
+    }
+
+}
+
+.textContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+//product description
+.discountPrice {
+    display: flex;
+    align-items: center;
+}
+
+.shoppingBtns {
+    display: flex;
+    justify-content: space-between;
+}
+
+.qtyBtns {
+    display: flex;
+    
+}
+//footer
+
+footer {
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+
