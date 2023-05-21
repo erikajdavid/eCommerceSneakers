@@ -8,6 +8,8 @@ const product = {
 }
 
 //function to have cart slide in an out when cart icon is clicked on
+//target the overlay element and save in a variable. 
+const overlayEl = document.querySelector('.overlay')
 //target cartReview and save in a variable
 const cartReviewEl = document.querySelector('.cartReview')
 //target cart and save in a variable
@@ -16,7 +18,16 @@ const cartEl = document.querySelector('.cart')
 cartEl.addEventListener('click', function(){
     cartEl.classList.toggle('activated');
     cartReviewEl.classList.toggle('activated');
+    overlayEl.classList.toggle('activated');
 });
+
+//target close cart icon and save in a variable.
+const closeCartEl = document.querySelector('.closeIcon')
+//add eventlisteners
+closeCartEl.addEventListener('click', function(){
+    cartReviewEl.classList.remove('activated');
+    overlayEl.classList.remove('activated')
+})
 
 
 //function to add to cart from product page
