@@ -8,7 +8,7 @@ const product = {
 }
 
 //function to have cart slide in an out when cart icon is clicked on
-//targer cartReview and save in a variable
+//target cartReview and save in a variable
 const cartReviewEl = document.querySelector('.cartReview')
 //target cart and save in a variable
 const cartEl = document.querySelector('.cart')
