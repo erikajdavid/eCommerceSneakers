@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
 
   <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"> 
   
   <title>Frontend Mentor | E-commerce product page</title>
 
@@ -14,18 +18,22 @@
 <body>
     <header>
         <div class="wrapper">
-            <img src="./images/logo.svg" alt="sneakers logo">
-            <nav>
-                <ul>
-                    <li>Collections</li>
-                    <li>Men</li>
-                    <li>Women</li>
-                    <li>About</li>
-                    <li>Contact</li>
-                </ul>
-            </nav>
-            <img src="./images/icon-cart.svg" alt="sneakers shopping cart">
-            <img src="./images/image-avatar.png" alt="user profile avatar">
+            <div class="headerLeft">
+                <img src="./images/logo.svg" alt="sneakers logo">
+                <nav>
+                    <ul>
+                        <li>Collections</li>
+                        <li>Men</li>
+                        <li>Women</li>
+                        <li>About</li>
+                        <li>Contact</li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="headerRight">
+                <img class="cart" src="./images/icon-cart.svg" alt="sneakers shopping cart">
+                <img class ="avatar" src="./images/image-avatar.png" alt="user profile avatar">
+            </div>
         </div>
     </header>
 
