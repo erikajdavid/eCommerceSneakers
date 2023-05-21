@@ -426,6 +426,11 @@ h2 {
   border: none;
   font-weight: 700;
   cursor: pointer;
+  transition: all 0.25s;
+}
+.minusBtn:hover,
+.plusBtn:hover {
+  color: rgb(255, 169, 48);
 }
 
 .minusBtn {
@@ -458,6 +463,10 @@ h2 {
   font-size: 0.8rem;
   cursor: pointer;
   box-shadow: 0 0 2px hsl(26, 100%, 55%);
+  transition: all 0.25s;
+}
+.addToCartBtn:hover {
+  background-color: rgb(255, 169, 48);
 }
 
 .addToCartCart {
