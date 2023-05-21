@@ -225,3 +225,51 @@ template {
   clip: rect(0 0 0 0);
   overflow: hidden;
 }
+
+html {
+  font-family: "Kumbh Sans", sans-serif;
+  font-size: 16px;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+.wrapper {
+  max-width: 1200px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+header .wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: hsl(219, 9%, 45%);
+}
+
+.headerLeft,
+.headerRight {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav ul {
+  display: flex;
+}
+nav ul li {
+  padding: 1.5rem;
+  color: hsl(220, 14%, 75%);
+  font-weight: 500;
+}
+
+.avatar {
+  width: 2.5rem;
+  margin-left: 2rem;
+}

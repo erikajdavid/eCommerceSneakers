@@ -8,3 +8,69 @@ html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}bo
 
 //.attribution { font-size: 11px; text-align: center; }
 //.attribution a { color: hsl(228, 45%, 44%); }
+
+//variables colors
+
+$orange: hsl(26, 100%, 55%);
+$paleOrange: hsl(25, 100%, 94%);
+$darkBlue: hsl(220, 13%, 13%);
+$darkGrayBlue: hsl(219, 9%, 45%);
+$grayBlue: hsl(220, 14%, 75%);
+$lightGrayBlue: hsl(223, 64%, 98%);
+$white: hsl(0, 0%, 100%);
+$blackOpacity: hsl(0, 0%, 0%);
+
+//variable fonts
+
+$primaryFont: 'Kumbh Sans', sans-serif;
+
+html {
+    font-family: $primaryFont;
+    font-size: 16px;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+ul {
+    list-style: none;
+}
+
+.wrapper {
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+}
+
+//navigation
+
+header .wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: $darkGrayBlue;
+}
+
+.headerLeft, 
+.headerRight {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav ul {
+    display: flex;
+    li {
+        padding: 1.5rem;
+        color: hsl(220, 14%, 75%);
+        font-weight: 500;
+    }
+}
+
+.avatar {
+    width: 2.5rem;
+    margin-left: 2rem;
+
+}
