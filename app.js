@@ -14,8 +14,10 @@ const cartReviewEl = document.querySelector('.cartReview')
 const cartEl = document.querySelector('.cart')
 //add eventlistener
 cartEl.addEventListener('click', function(){
-    cartReviewEl.style.display = "block";
-})
+    console.log('cart clicked');
+    cartEl.classList.toggle('activated');
+    cartReviewEl.classList.toggle('activated');
+});
 
 
 //function to add to cart from product page
