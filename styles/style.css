@@ -274,6 +274,10 @@ nav ul li {
 nav ul li a {
   text-decoration: none;
   color: hsl(219, 9%, 45%);
+  transition: all 0.25s;
+}
+nav ul li a:hover {
+  color: hsl(26, 100%, 55%);
 }
 
 .cartItemNumber {
