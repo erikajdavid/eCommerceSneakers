@@ -336,11 +336,23 @@ nav ul li a:hover {
   text-align: left;
   padding: 1rem;
   font-weight: 700;
-  border-bottom: 1px solid hsl(220, 14%, 75%);
 }
 
 .cartReview.activated {
   left: 75%;
+}
+
+.cartTop {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid hsl(220, 14%, 75%);
+}
+
+.closeIcon {
+  padding: 0 1rem;
+  cursor: pointer;
 }
 
 .checkoutBtn {
@@ -354,6 +366,23 @@ nav ul li a:hover {
   font-weight: 700;
   letter-spacing: 0.05rem;
   text-align: center;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: hsl(25, 100%, 94%);
+  opacity: 0.6;
+  display: none;
+  transition: 0.4s;
+  z-index: 4;
+}
+
+.overlay.activated {
+  display: block;
 }
 
 main {
