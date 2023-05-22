@@ -51,7 +51,8 @@
             <p class="yourCart">Cart</p>
         <img class="closeIcon" src="./images/icon-close.svg">
         </div>
-        <ul class="">
+        <p>Your cart is empty.</p>
+        <ul class="productsInCart">
             <!--this is where you want the products to render-->
         </ul>
         <button class="checkoutBtn">Checkout</button>
@@ -62,10 +63,10 @@
             <div class="imageContainer">
                 <img src="./images/image-product-1.jpg" alt="#">
                 <div class="thumbnailContainer">
-                    <img src="./images/image-product-1-thumbnail.jpg" alt="#"> 
-                    <img src="./images/image-product-2-thumbnail.jpg" alt="#"> 
-                    <img src="./images/image-product-3-thumbnail.jpg" alt="#"> 
-                    <img src="./images/image-product-4-thumbnail.jpg" alt="#"> 
+                    <img class="thumbnail" src="./images/image-product-1-thumbnail.jpg" alt="#"> 
+                    <img class="thumbnail" src="./images/image-product-2-thumbnail.jpg" alt="#"> 
+                    <img class="thumbnail" src="./images/image-product-3-thumbnail.jpg" alt="#"> 
+                    <img class="thumbnail" src="./images/image-product-4-thumbnail.jpg" alt="#"> 
                 </div>
             </div>
             <div class="textContainer">
@@ -94,6 +95,25 @@
             </div>
         </section>
     </main>
+
+    <!--carousel-->
+    <div class="carouselContainer">
+        <div class="carouselOverlay"></div>
+        <div class="carousel">
+            <img class="previousIcon" src="./images/icon-previous.svg">
+            <img class="nextIcon" src="./images/icon-next.svg">
+            <img class="closeCarousel" src="./images/icon-close.svg">
+            <ul class="imageContainerCarousel">
+                <li><img class="slide" src="./images/image-product-1.jpg" alt="#"></li>
+            </ul>
+            <ul class="thumbnailContainerCarousel">
+                <li><img src="./images/image-product-1.jpg" alt="#"></li>
+                <li><img src="./images/image-product-2.jpg" alt="#"></li>
+                <li><img src="./images/image-product-3.jpg" alt="#"></li>
+                <li><img src="./images/image-product-4.jpg" alt="#"></li>
+            </ul>
+        </div>
+    </div>
 
     <footer>
         <div class="attribution">
