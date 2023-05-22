@@ -56,4 +56,26 @@ minusBtnEl.addEventListener('click', function(){
 
 //pseudo code for image carousel TK
 
+const carouselContainerEl = document.querySelector('.carouselContainer');
+carouselContainerEl.style.display = 'none';
+
+const thumbnailsEl = document.querySelectorAll('.thumbnail');
+
+thumbnailsEl.forEach((thumbnail) => {
+  thumbnail.addEventListener('click', function(event) {
+    event.stopPropagation(); // Prevent the click event from bubbling up to the window
+    carouselContainerEl.style.display = 'flex';
+  });
+});
+
+window.addEventListener('click', function() {
+  carouselContainerEl.style.display = 'none';
+});
+
+
+
+
+
+
+
 
