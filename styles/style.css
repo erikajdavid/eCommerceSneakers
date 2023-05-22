@@ -239,6 +239,8 @@ p {
 
 ul {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .wrapper {
@@ -270,14 +272,16 @@ nav ul {
 }
 nav ul li {
   padding: 1.25rem;
+  height: 100%;
 }
 nav ul li a {
   text-decoration: none;
   color: hsl(219, 9%, 45%);
   transition: all 0.25s;
+  height: 100%;
 }
 nav ul li a:hover {
-  color: hsl(26, 100%, 55%);
+  border-bottom: 4px solid hsl(26, 100%, 55%);
 }
 
 .cartItemNumber {
@@ -366,6 +370,7 @@ nav ul li a:hover {
   font-weight: 700;
   letter-spacing: 0.05rem;
   text-align: center;
+  display: none;
 }
 
 .overlay {
@@ -562,4 +567,82 @@ footer {
 footer a {
   color: hsl(26, 100%, 55%);
   text-decoration: none;
+}
+
+.carouselOverlay {
+  background-color: rgba(0, 0, 0, 0.8);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.carouselContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel {
+  width: 38%;
+  position: absolute;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.closeCarousel {
+  align-self: flex-end;
+  width: 20px;
+  padding-bottom: 1rem;
+  cursor: pointer;
+}
+
+.imageContainerCarousel img {
+  width: 100%;
+  border-radius: 20px;
+}
+
+.thumbnailContainerCarousel {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 2rem;
+}
+.thumbnailContainerCarousel li {
+  width: 20%;
+}
+.thumbnailContainerCarousel li img {
+  width: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.previousIcon,
+.nextIcon {
+  background-color: white;
+  width: 3rem;
+  height: 3rem;
+  padding: 0.9rem;
+  border-radius: 100px;
+  cursor: pointer;
+}
+
+.previousIcon {
+  position: absolute;
+  left: -20px;
+  top: 300px;
+}
+
+.nextIcon {
+  position: absolute;
+  right: -20px;
+  top: 300px;
 }
