@@ -88,7 +88,7 @@ nextButtonEl.addEventListener('click', function() {
   // Update the width variable before updating the transform property
   width = slideEl[index].clientWidth;
 
-  imageContainerCarouselEl.style.transform = `translate(${-index * width}px)`;
+  imageContainerCarouselEl.style.transform = `translate(${-index * (width + 10)}px)`;
 
   if (index === slideEl.length - 1) {
     nextButtonEl.classList.add('disable');
@@ -103,7 +103,7 @@ prevButtonEl.addEventListener('click', function() {
   // Update the width variable before updating the transform property
   width = slideEl[index].clientWidth;
 
-  imageContainerCarouselEl.style.transform = `translate(${-index * width}px)`;
+  imageContainerCarouselEl.style.transform = `translate(${-index * (width + 10)}px)`;
 
   if (index === 0) {
     prevButtonEl.classList.add('disable');
@@ -113,6 +113,11 @@ prevButtonEl.addEventListener('click', function() {
 });
 
 //close carousel
+const overlayCarouselEl = document.querySelector('.carouselOverlay');
+overlayCarouselEl.addEventListener('click', function() {
+  carouselContainerEl.style.display = 'none';
+})
+
 const closeCarouselEl = document.querySelector('.closeCarousel')
 closeCarouselEl.addEventListener('click', function(){
   carouselContainerEl.style.display = 'none';
