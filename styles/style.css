@@ -595,7 +595,7 @@ footer a {
 
 .carousel {
   width: 500px;
-  height: 80vh;
+  height: 100vh;
   display: flex;
   overflow: hidden;
   border-radius: 10px;
@@ -606,24 +606,25 @@ footer a {
   display: flex;
   width: 500px;
   height: 500px;
+  top: 23%;
   transition: transform 0.8s ease;
   z-index: 105;
   border-radius: 10px;
   position: absolute;
-  top: 7%;
 }
 
 .slide {
   flex-shrink: 0;
-  max-width: 500px;
+  max-width: 480px;
+  margin-left: 10px;
   border-radius: 10px;
 }
 
 .carouselNavBtns {
-  width: 550px;
+  width: 525px;
   height: 50px;
   position: absolute;
-  top: 44%;
+  top: 50%;
   z-index: 300;
   display: flex;
   justify-content: space-between;
@@ -657,7 +658,8 @@ footer a {
 
 .closeCarousel {
   position: absolute;
-  right: 0;
+  right: 2%;
+  top: 18%;
   cursor: pointer;
   z-index: 200;
   font-size: 2rem;
@@ -668,19 +670,23 @@ footer a {
   color: hsl(26, 100%, 55%);
 }
 
-.thumbnailContainerCarousel {
-  display: flex;
-  position: absolute;
-  bottom: 0;
-  max-width: 500px;
-  z-index: 200;
-  justify-content: space-between;
-}
-.thumbnailContainerCarousel li {
-  width: 22%;
-}
-.thumbnailContainerCarousel .thumbnailCarousel {
-  width: 100%;
-  border-radius: 8px;
-  cursor: pointer;
-}
+/*.thumbnailContainerCarousel {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    max-width: 500px;
+    z-index: 200;
+    justify-content: space-between;
+    li {
+        width: 22%;
+    }
+    .thumbnailCarousel {
+        width: 100%;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.25s;
+        &:hover {
+            filter:grayscale(0.6);    
+        }
+    }
+}*/

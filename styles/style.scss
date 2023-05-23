@@ -407,7 +407,7 @@ footer {
 
 .carousel {
     width: 500px;
-    height: 80vh;
+    height: 100vh;
     display: flex;
     overflow: hidden;
     border-radius: 10px;
@@ -418,25 +418,25 @@ footer {
     display: flex;
     width: 500px;
     height: 500px;
+    top: 23%;
     transition: transform 0.8s ease;
     z-index: 105;
     border-radius: 10px;
     position: absolute;
-    top: 7%;
 }
 
 .slide {
     flex-shrink: 0;
-    max-width: 500px;
-    //margin-left: 10px;
+    max-width: 480px;
+    margin-left: 10px;
     border-radius: 10px;
 }
 
 .carouselNavBtns {
-    width: 550px;
+    width: 525px;
     height: 50px;
     position: absolute;
-    top: 44%;
+    top: 50%;
     z-index: 300;
     display: flex;
     justify-content: space-between;
@@ -469,7 +469,8 @@ footer {
 
 .closeCarousel {
     position: absolute;
-    right: 0;
+    right: 2%;
+    top: 18%;
     cursor: pointer;
     z-index: 200;
     font-size: 2rem;
@@ -480,7 +481,7 @@ footer {
     }
 }
 
-.thumbnailContainerCarousel {
+/*.thumbnailContainerCarousel {
     display: flex;
     position: absolute;
     bottom: 0;
@@ -494,5 +495,9 @@ footer {
         width: 100%;
         border-radius: 8px;
         cursor: pointer;
+        transition: all 0.25s;
+        &:hover {
+            filter:grayscale(0.6);    
+        }
     }
-}
+}*/
