@@ -70,6 +70,7 @@ header .wrapper {
 
 nav ul {
     display: flex;
+    padding-left: 1.25rem;
     li {
         padding: 1.25rem;
         height: 100%;
@@ -406,9 +407,11 @@ footer {
 
 .carousel {
     width: 500px;
+    height: 80vh;
     display: flex;
     overflow: hidden;
     border-radius: 10px;
+    position: absolute;
 }
 
 .imageContainerCarousel {
@@ -418,14 +421,26 @@ footer {
     transition: transform 0.8s ease;
     z-index: 105;
     border-radius: 10px;
-
+    position: absolute;
+    top: 7%;
 }
 
 .slide {
     flex-shrink: 0;
-    max-width: 480px;
-    margin-left: 10px;
+    max-width: 500px;
+    //margin-left: 10px;
     border-radius: 10px;
+}
+
+.carouselNavBtns {
+    width: 550px;
+    height: 50px;
+    position: absolute;
+    top: 44%;
+    z-index: 300;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .previousIcon,
@@ -439,22 +454,11 @@ footer {
     background-color: $white;
     color: black;
     border-radius: 25px;
-    position: absolute;
-    top: 47%;
-    z-index: 110;
     cursor: pointer;
     transition: all 0.25s;
     &:hover {
         color: $orange;
     }
-}
-
-.nextIcon {
-    right: 32.25%;
-}
-
-.previousIcon {
-    left: 32.25%;
 }
 
 .nextIcon.disable,
@@ -465,8 +469,7 @@ footer {
 
 .closeCarousel {
     position: absolute;
-    top: 15%;
-    right: 34%;
+    right: 0;
     cursor: pointer;
     z-index: 200;
     font-size: 2rem;
@@ -474,5 +477,22 @@ footer {
     transition: all 0.25s;
     &:hover {
         color: $orange;
+    }
+}
+
+.thumbnailContainerCarousel {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    max-width: 500px;
+    z-index: 200;
+    justify-content: space-between;
+    li {
+        width: 22%;
+    }
+    .thumbnailCarousel {
+        width: 100%;
+        border-radius: 8px;
+        cursor: pointer;
     }
 }
