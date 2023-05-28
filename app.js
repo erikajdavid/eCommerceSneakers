@@ -78,12 +78,16 @@ const plusBtnEl = document.querySelector('.plusBtn')
 
 const quantity = document.querySelector('.qty');
 
-plusBtnEl.addEventListener('click', function(){
-  let currentQuantity = quantity.textContent;
-  currentQuantity++;
-  quantity.textContent = currentQuantity;
+let productPageQuantity = 0;
 
-  addToCart();
+plusBtnEl.addEventListener('click', function(){
+  
+  productPageQuantity++;
+  quantity.textContent = productPageQuantity;
+  
+  changeNumberofUnits();
+
+  calculateTotalQuantity();
 });
 
 //function to remove item from cart from product page
@@ -94,13 +98,72 @@ minusBtnEl.addEventListener('click', function(){
   let currentQuantity = quantity.textContent;
   currentQuantity--;
   quantity.textContent = currentQuantity;
+
   if (currentQuantity <= 0) {
     quantity.textContent = 0;
   }
 });
 
-//function to add to cart button
+//change number of units function
 
+function changeNumberofUnits(action, id) {
+  userCart = userCart.map((item) => {
+    let numberOfUnits = item.numberOfUnits;
+    if(item.id === id) {
+      if(action === "plus")   
+        numberOfUnits++; 
+    }
+    return {
+      ...item,
+      numberOfUnits,
+    }
+  })
+
+  updateCart();
+  renderProductsToCart();
+}
+
+//user cart array to store personal items selected 
+
+let userCart = [];
+function addToCart(id)  {
+  if (userCart.some((item) => item.id === id)) {
+    alert('product already in cart');
+  } else {
+    const item = products.find((product) => product.id === id); //find product that verifies this condition
+
+    // Add the product to the cart
+    //save the product found in the new array
+    userCart.push({
+      ...item,
+      numberOfUnits: 1,
+
+    });
+    //push to firebase?//or should this be onValue?
+    //const firebaseObj = push(dbRef, item);
+    //console.log(firebaseObj);
+    console.log(userCart)
+
+    updateCart();
+    calculateTotalQuantity()
+  }
+}
+
+function updateCart() {
+  renderProductsToCart();
+  calculateTotalQuantity();
+}
+
+// Function to calculate the total quantity of items in the cart
+function calculateTotalQuantity() {
+  let totalQuantity = 0;
+  for (const item of userCart) {
+    totalQuantity += item.numberOfUnits;
+  }
+  return totalQuantity;
+}
+
+// Function to add to cart button
 const addToCartBtn = document.querySelector('.addToCartBtn');
 
 addToCartBtn.addEventListener('click', function() {
@@ -110,41 +173,24 @@ addToCartBtn.addEventListener('click', function() {
   cartEl.classList.toggle('activated');
   cartReviewEl.classList.toggle('activated');
   overlayEl.classList.toggle('activated');
+
+  calculateTotalQuantity()
 });
 
-//user cart array to store personal items selected 
-
-let userCart = [];
-
-function addToCart(id) {
-  const item = products.find((product) => product.id === id); //find product that verifies this condition
-
-    // Add the product to the cart
-    //save the product found in the new array
-    userCart.push(item);
-    //push to firebase
-    const firebaseObj = push(dbRef, item);
-    console.log(firebaseObj);
-
-    console.log(userCart);
-  }
-    
-
-    //renderProductsToCart();
-    //add onvalue here to listen to a change.
 
 const productsEl = document.querySelector('.productsInCart')
 
 function renderProductsToCart() {
-  products.forEach((product, index) => {
+  productsEl.innerHTML = ''; //clear cart element
+  userCart.forEach((item) => {
     productsEl.innerHTML += `
       <li class="cartProductContainer">
         <div class="cartImgContainer">
-          <img src="${product.imgSrc}" alt="${product.name}">
+          <img src="${item.imgSrc}" alt="${item.name}">
         </div>
         <div class="cartTextContainer">
-          <p>${product.name}</p>
-          <p>$${product.discountPrice} x ${product.id} $${product.originalPrice}</p>
+          <p>${item.name}</p>
+          <p>$${item.discountPrice} x ${item.numberOfUnits} $${item          .originalPrice}</p>
         </div>
         <div class="trashContainer">
           <img class="trashCan" src="./images/icon-delete.svg"> 
