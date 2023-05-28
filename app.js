@@ -67,32 +67,24 @@ const plusBtnEl = document.querySelector('.plusBtn')
 
 const quantity = document.querySelector('.qty');
 
-function addQuantity() {
-  plusBtnEl.addEventListener('click', function(){
-    let currentQuantity = quantity.textContent;
-    currentQuantity++;
-    quantity.textContent = currentQuantity;
-  });
-};
-
-addQuantity();
+plusBtnEl.addEventListener('click', function(){
+  let currentQuantity = quantity.textContent;
+  currentQuantity++;
+  quantity.textContent = currentQuantity;
+});
 
 //function to remove item from cart from product page
 //when - btn is pressed, qty--, product is removed from the cart the the cart item number--
 const minusBtnEl = document.querySelector('.minusBtn')
 
-function removeQuantity() {
-  minusBtnEl.addEventListener('click', function(){
-    let currentQuantity = quantity.textContent;
-    currentQuantity--;
-    quantity.textContent = currentQuantity;
-    if (currentQuantity <= 0) {
-      quantity.textContent = 0;
-    }
-  });
-}
-
-removeQuantity();
+minusBtnEl.addEventListener('click', function(){
+  let currentQuantity = quantity.textContent;
+  currentQuantity--;
+  quantity.textContent = currentQuantity;
+  if (currentQuantity <= 0) {
+    quantity.textContent = 0;
+  }
+});
 
 //function to add to cart button
 
@@ -101,6 +93,9 @@ const addToCartBtn = document.querySelector('.addToCartBtn');
 const cartItemNumber = document.querySelector('.cartItemNumber');
 
 const emptyCart = document.querySelector('.emptyCart');
+
+const checkoutBtn = document.querySelector('.checkoutBtn');
+
 
 function addToCart() {
   addToCartBtn.addEventListener('click', function(){
@@ -117,7 +112,11 @@ function addToCart() {
     renderProductsToCart();
 
     if (currentCartItemQuantity > 0) {
-      emptyCart.remove('emptyCart');
+      emptyCart.style.display = "none";
+      checkoutBtn.style.display = "flex";
+    } else {
+      emptyCart.style.display = "flex";
+      checkoutBtn.style.display = "none";
     }
   })
 }
@@ -141,7 +140,7 @@ const products = [
 const productsEl = document.querySelector('.productsInCart')
 
 function renderProductsToCart() {
-  products.forEach((product) => {
+  products.forEach((product, index) => {
     productsEl.innerHTML += `
       <li class="cartProductContainer">
         <div class="cartImgContainer">
@@ -152,12 +151,43 @@ function renderProductsToCart() {
           <p>$${product.discountPrice} x ${product.quantity} $${product.originalPrice}</p>
         </div>
         <div class="trashContainer">
-          <img src="./images/icon-delete.svg"> 
+          <img class="trashCan" src="./images/icon-delete.svg"> 
         </div>
       </li>
-    `
-  })
+    `;
+
+
+
+    const trashCanIcons = document.querySelectorAll('.trashCan');
+    trashCanIcons[index].addEventListener('click', function() {
+      products.splice(index, 1); // Remove the product from the array
+      updateCart(); // Update the cart view
+    });
+  });
 }
+
+function updateCart() {
+  // Clear the existing cart view
+  productsEl.innerHTML = '';
+  // Render the updated products in the cart
+  renderProductsToCart();
+  // Any additional logic or calculations related to updating the cart can be added here
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const carouselContainerEl = document.querySelector('.carouselContainer');
 carouselContainerEl.style.display = 'none';
