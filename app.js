@@ -1,11 +1,43 @@
+
+
+  // Import the functions you need from the SDKs you need
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+
+  // TODO: Add SDKs for Firebase products that you want to use
+
+  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+
+  const firebaseConfig = {
+
+    apiKey: "AIzaSyC07Ko7_orRnMwsfTS4CUZqBJqRdAjDcLY",
+
+    authDomain: "ecomm-sneakers.firebaseapp.com",
+
+    projectId: "ecomm-sneakers",
+
+    storageBucket: "ecomm-sneakers.appspot.com",
+
+    messagingSenderId: "913809506911",
+
+    appId: "1:913809506911:web:c85382d54bc0f7f0af11ea"
+
+  };
+
+  // Initialize Firebase
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+  const dbRef = ref(database);
+
+  const firebaseObj = push(dbRef, "first push to Firebase");
+  console.log(firebaseObj);
+
 //pseudocode for cart 
-
-//create object to render in the cart
-
-const product = {
-    name: 'Fall Limited Edition Sneakers',
-    price: 125
-}
 
 //function to have cart slide in an out when cart icon is clicked on
 //target the overlay element and save in a variable. 
@@ -29,32 +61,39 @@ closeCartEl.addEventListener('click', function(){
     overlayEl.classList.remove('activated')
 })
 
-
-//function to add to cart from product page
 //when + btn is pressed, qty++, product is rendered in the cart and the cart item number++
 //target + button
 const plusBtnEl = document.querySelector('.plusBtn')
-//add eventlistener
-plusBtnEl.addEventListener('click', function(){
-    //function that renders items to cart and updates the cart item number
-})
+
+const quantity = document.querySelector('.qty');
+
+function addToCart() {
+  plusBtnEl.addEventListener('click', function(){
+    let currentQuantity = quantity.textContent;
+    currentQuantity++;
+    quantity.textContent = currentQuantity;
+  });
+};
+
+addToCart();
 
 //function to remove item from cart from product page
 //when - btn is pressed, qty--, product is removed from the cart the the cart item number--
 const minusBtnEl = document.querySelector('.minusBtn')
-//add eventlistener
-minusBtnEl.addEventListener('click', function(){
-    //function that renders items to cart and updates the cart item number
-})
 
-//function to render product to cart
+function removeFromCart() {
+  minusBtnEl.addEventListener('click', function(){
+    let currentQuantity = quantity.textContent;
+    currentQuantity--;
+    quantity.textContent = currentQuantity;
+    if (currentQuantity <= 0) {
+      quantity.textContent = 0;
+    }
+  });
+}
 
-//when cart icon is clicked on
-//display cart, slide in. 
-//overlay activated. 
-//when user clicks on window, cart slides away. 
+removeFromCart();
 
-//pseudo code for image carousel TK
 
 const carouselContainerEl = document.querySelector('.carouselContainer');
 carouselContainerEl.style.display = 'none';
@@ -116,11 +155,11 @@ prevButtonEl.addEventListener('click', function() {
 const overlayCarouselEl = document.querySelector('.carouselOverlay');
 overlayCarouselEl.addEventListener('click', function() {
   carouselContainerEl.style.display = 'none';
-})
+});
 
 const closeCarouselEl = document.querySelector('.closeCarousel')
 closeCarouselEl.addEventListener('click', function(){
   carouselContainerEl.style.display = 'none';
-})
+});
 
 
