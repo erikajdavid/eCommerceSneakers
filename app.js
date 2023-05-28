@@ -119,6 +119,9 @@ function changeNumberofUnits(action, id) {
 
 // User cart array to store personal items selected
 let userCart = [];
+const productInCart = document.querySelector('.cartProductContainer');
+const emptyCart = document.querySelector('.emptyCart');
+
 
 // Function to add a product to the cart
 function addToCart(id) {
@@ -129,11 +132,11 @@ function addToCart(id) {
       ...item,
       numberOfUnits: productPageQuantity, // Use the productPageQuantity as the initial numberOfUnits
     });
+    emptyCart.style.display = "none";
     console.log(userCart);
     updateCart();
   }
   if (productPageQuantity === 0) {
-      const productInCart = document.querySelector('.cartProductContainer');
       productInCart.style.display = "none";
   } //this is to make sure that you cannot add the product to cart if quantity is 0
 }
