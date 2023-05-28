@@ -112,17 +112,26 @@ addToCartBtn.addEventListener('click', function() {
   overlayEl.classList.toggle('activated');
 });
 
+//user cart array to store personal items selected 
+
+let userCart = [];
+
 function addToCart(id) {
-  console.log(id);
-  // Add the logic to find the product with the given id and add it to the cart
-  // Example:
-  const product = products.find(product => product.id === id);
-  if (product) {
+  const item = products.find((product) => product.id === id); //find product that verifies this condition
+
     // Add the product to the cart
-    console.log('Product added to cart:', product);
-    //add onvalue here to listen to a change.
+    //save the product found in the new array
+    userCart.push(item);
+    //push to firebase
+    const firebaseObj = push(dbRef, item);
+    console.log(firebaseObj);
+
+    console.log(userCart);
   }
-}
+    
+
+    //renderProductsToCart();
+    //add onvalue here to listen to a change.
 
 const productsEl = document.querySelector('.productsInCart')
 
@@ -145,7 +154,7 @@ function renderProductsToCart() {
   })
 }
 
-renderProductsToCart();
+
 
 
 
