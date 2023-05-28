@@ -34,64 +34,62 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const dbRef = ref(database);
 
-//create object to render in the cart
-const products = [
-  {
-      id: 1,
-      name: 'Fall Limited Edition Sneakers',
-      discountPrice: 125,
-      originalPrice: 250,
-      inCart: false,
-      quantity: 0,
-      imgSrc: "./images/image-product-1.jpg",
-  }
-]
-
 //const firebaseObj = push(dbRef, products);
 //console.log(firebaseObj);
 
-//function to have cart slide in an out when cart icon is clicked on
-//target the overlay element and save in a variable. 
+// Create object to render in the cart
+const products = [
+  {
+    id: 1,
+    name: 'Fall Limited Edition Sneakers',
+    discountPrice: 125,
+    originalPrice: 250,
+    inCart: false,
+    quantity: 0,
+    imgSrc: "./images/image-product-1.jpg",
+  }
+]
+
+// Target the overlay element and save it in a variable
 const overlayEl = document.querySelector('.overlay')
-//target cartReview and save in a variable
+
+// Target cartReview and save it in a variable
 const cartReviewEl = document.querySelector('.cartReview')
-//target cart and save in a variable
+
+// Target cart and save it in a variable
 const cartEl = document.querySelector('.cart')
-//add eventlistener
+
+// Add event listener to cart icon
 cartEl.addEventListener('click', function(){
     cartEl.classList.toggle('activated');
     cartReviewEl.classList.toggle('activated');
     overlayEl.classList.toggle('activated');
 });
 
-//target close cart icon and save in a variable.
+// Target close cart icon and save it in a variable
 const closeCartEl = document.querySelector('.closeIcon')
-//add eventlisteners
+
+// Add event listener to close cart icon
 closeCartEl.addEventListener('click', function(){
     cartReviewEl.classList.remove('activated');
-    overlayEl.classList.remove('activated')
+    overlayEl.classList.remove('activated');
 });
 
-//when + btn is pressed, qty++, product is rendered in the cart and the cart item number++
-//target + button
+// Target + button
 const plusBtnEl = document.querySelector('.plusBtn')
 
 const quantity = document.querySelector('.qty');
-
 let productPageQuantity = 0;
 
-plusBtnEl.addEventListener('click', function(){
-  
+plusBtnEl.addEventListener('click', function() {
+  const productId = 1; 
   productPageQuantity++;
   quantity.textContent = productPageQuantity;
-  
-  changeNumberofUnits();
-
+  changeNumberofUnits("plus", productId); 
   calculateTotalQuantity();
 });
 
-//function to remove item from cart from product page
-//when - btn is pressed, qty--, product is removed from the cart the the cart item number--
+// Function to decrease the quantity when - button is pressed
 const minusBtnEl = document.querySelector('.minusBtn')
 
 minusBtnEl.addEventListener('click', function(){
@@ -104,54 +102,43 @@ minusBtnEl.addEventListener('click', function(){
   }
 });
 
-//change number of units function
-
+// Function to change the number of units
 function changeNumberofUnits(action, id) {
   userCart = userCart.map((item) => {
-    let numberOfUnits = item.numberOfUnits;
-    if(item.id === id) {
-      if(action === "plus")   
-        numberOfUnits++; 
+    if (item.id === id) {
+      if (action === "plus") {
+        item.numberOfUnits++; // Increment the numberOfUnits
+      } else if (action === "minus" && item.numberOfUnits > 0) {
+        item.numberOfUnits--; // Decrement the numberOfUnits if it's greater than 0
+      }
     }
-    return {
-      ...item,
-      numberOfUnits,
-    }
-  })
-
+    return item;
+  });
   updateCart();
-  renderProductsToCart();
 }
 
-//user cart array to store personal items selected 
-
+// User cart array to store personal items selected
 let userCart = [];
-function addToCart(id)  {
-  if (userCart.some((item) => item.id === id)) {
-    alert('product already in cart');
-  } else {
-    const item = products.find((product) => product.id === id); //find product that verifies this condition
 
-    // Add the product to the cart
-    //save the product found in the new array
+// Function to add a product to the cart
+function addToCart(id) {
+  if (userCart.some((item) => item.id === id)) {
+  } else {
+    const item = products.find((product) => product.id === id);
     userCart.push({
       ...item,
-      numberOfUnits: 1,
-
+      numberOfUnits: productPageQuantity, // Use the productPageQuantity as the initial numberOfUnits
     });
-    //push to firebase?//or should this be onValue?
-    //const firebaseObj = push(dbRef, item);
-    //console.log(firebaseObj);
-    console.log(userCart)
-
+    console.log(userCart);
     updateCart();
-    calculateTotalQuantity()
   }
 }
 
+// Update the cart after adding or changing the quantity
 function updateCart() {
   renderProductsToCart();
   calculateTotalQuantity();
+  trashIt();
 }
 
 // Function to calculate the total quantity of items in the cart
@@ -163,7 +150,7 @@ function calculateTotalQuantity() {
   return totalQuantity;
 }
 
-// Function to add to cart button
+// Function to handle the add to cart button click
 const addToCartBtn = document.querySelector('.addToCartBtn');
 
 addToCartBtn.addEventListener('click', function() {
@@ -174,14 +161,14 @@ addToCartBtn.addEventListener('click', function() {
   cartReviewEl.classList.toggle('activated');
   overlayEl.classList.toggle('activated');
 
-  calculateTotalQuantity()
+  calculateTotalQuantity();
 });
 
-
+// Function to render the products in the cart
 const productsEl = document.querySelector('.productsInCart')
 
 function renderProductsToCart() {
-  productsEl.innerHTML = ''; //clear cart element
+  productsEl.innerHTML = ''; // Clear the cart element
   userCart.forEach((item) => {
     productsEl.innerHTML += `
       <li class="cartProductContainer">
@@ -190,7 +177,7 @@ function renderProductsToCart() {
         </div>
         <div class="cartTextContainer">
           <p>${item.name}</p>
-          <p>$${item.discountPrice} x ${item.numberOfUnits} $${item          .originalPrice}</p>
+          <p>$${item.discountPrice} x ${item.numberOfUnits} $${item.originalPrice}</p>
         </div>
         <div class="trashContainer">
           <img class="trashCan" src="./images/icon-delete.svg"> 
@@ -198,173 +185,19 @@ function renderProductsToCart() {
       </li>
     `;
   })
+
+  trashIt();
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-  //pseudocode for cart 
-
-//function to have cart slide in an out when cart icon is clicked on
-//target the overlay element and save in a variable. 
-const overlayEl = document.querySelector('.overlay')
-//target cartReview and save in a variable
-const cartReviewEl = document.querySelector('.cartReview')
-//target cart and save in a variable
-const cartEl = document.querySelector('.cart')
-//add eventlistener
-cartEl.addEventListener('click', function(){
-    cartEl.classList.toggle('activated');
-    cartReviewEl.classList.toggle('activated');
-    overlayEl.classList.toggle('activated');
-});
-
-//target close cart icon and save in a variable.
-const closeCartEl = document.querySelector('.closeIcon')
-//add eventlisteners
-closeCartEl.addEventListener('click', function(){
-    cartReviewEl.classList.remove('activated');
-    overlayEl.classList.remove('activated')
-})
-
-//when + btn is pressed, qty++, product is rendered in the cart and the cart item number++
-//target + button
-const plusBtnEl = document.querySelector('.plusBtn')
-
-const quantity = document.querySelector('.qty');
-
-plusBtnEl.addEventListener('click', function(){
-  let currentQuantity = quantity.textContent;
-  currentQuantity++;
-  quantity.textContent = currentQuantity;
-});
-
-//function to remove item from cart from product page
-//when - btn is pressed, qty--, product is removed from the cart the the cart item number--
-const minusBtnEl = document.querySelector('.minusBtn')
-
-minusBtnEl.addEventListener('click', function(){
-  let currentQuantity = quantity.textContent;
-  currentQuantity--;
-  quantity.textContent = currentQuantity;
-  if (currentQuantity <= 0) {
-    quantity.textContent = 0;
-  }
-});
-
-//function to add to cart button
-
-const addToCartBtn = document.querySelector('.addToCartBtn');
-
-const cartItemNumber = document.querySelector('.cartItemNumber');
-
-const emptyCart = document.querySelector('.emptyCart');
-
-const checkoutBtn = document.querySelector('.checkoutBtn');
-
-let userCart = []
-
-function addToCart() {
-  addToCartBtn.addEventListener('click', function(){
-    let currentCartItemQuantity = parseInt(cartItemNumber.textContent);
-    let productQuantity = parseInt(quantity.textContent);
-    
-    currentCartItemQuantity += productQuantity;
-    cartItemNumber.textContent = currentCartItemQuantity;
-    
-    cartEl.classList.toggle('activated');
-    cartReviewEl.classList.toggle('activated');
-    overlayEl.classList.toggle('activated');
-
-    renderProductsToCart();
-
-    if (currentCartItemQuantity > 0) {
-      emptyCart.style.display = "none";
-      checkoutBtn.style.display = "flex";
-    } else {
-      emptyCart.style.display = "flex";
-      checkoutBtn.style.display = "none";
-    }
+function trashIt() {
+  const trashIcons = document.querySelectorAll('.trashCan');
+  trashIcons.forEach((trashIcon) => {
+    trashIcon.addEventListener('click', function() {
+      const productInCart = document.querySelector('.cartProductContainer');
+      productInCart.style.display = "none";
+    })
   })
 }
-
-addToCart();
-
-//render items to cart
-
-//create object to render in the cart
-const products = [
-  {
-      id: 1,
-      name: 'Fall Limited Edition Sneakers',
-      discountPrice: 125,
-      originalPrice: 250,
-      quantity: 0,
-      imgSrc: "./images/image-product-1.jpg",
-  }
-]
-
-const productsEl = document.querySelector('.productsInCart')
-
-function renderProductsToCart() {
-  products.forEach((product, index) => {
-    productsEl.innerHTML += `
-      <li class="cartProductContainer">
-        <div class="cartImgContainer">
-          <img src="${product.imgSrc}" alt="${product.name}">
-        </div>
-        <div class="cartTextContainer">
-          <p>${product.name}</p>
-          <p>$${product.discountPrice} x ${product.quantity} $${product.originalPrice}</p>
-        </div>
-        <div class="trashContainer">
-          <img class="trashCan" src="./images/icon-delete.svg"> 
-        </div>
-      </li>
-    `;
-
-
-
-    const trashCanIcons = document.querySelectorAll('.trashCan');
-    trashCanIcons[index].addEventListener('click', function() {
-      products.splice(index, 1); // Remove the product from the array
-      updateCart(); // Update the cart view
-    });
-  });
-}
-
-function updateCart() {
-  // Clear the existing cart view
-  productsEl.innerHTML = '';
-  // Render the updated products in the cart
-  renderProductsToCart();
-  // Any additional logic or calculations related to updating the cart can be added here
-}
-
-*/
-
-
-
 
 
 
