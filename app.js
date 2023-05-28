@@ -114,8 +114,10 @@ function addToCart() {
     cartReviewEl.classList.toggle('activated');
     overlayEl.classList.toggle('activated');
 
+    renderProductsToCart();
+
     if (currentCartItemQuantity > 0) {
-      emptyCart.style.display = "none";
+      emptyCart.remove('emptyCart');
     }
   })
 }
@@ -131,7 +133,8 @@ const products = [
       name: 'Fall Limited Edition Sneakers',
       discountPrice: 125,
       originalPrice: 250,
-      imgSrc: "./images/image-product-1.jpg"
+      quantity: 0,
+      imgSrc: "./images/image-product-1.jpg",
   }
 ]
 
@@ -140,26 +143,21 @@ const productsEl = document.querySelector('.productsInCart')
 function renderProductsToCart() {
   products.forEach((product) => {
     productsEl.innerHTML += `
-      <li>
-        <div class="cartProductContainer>
-          <div class="cartImgContainer">
-            <img src="${product.imgSrc}" alt="${product.name}">
-          </div>
-          <div class="cartTextContainer">
-            <p>"${product.discountPrice}"</p>
-            <p>"${product.originalPrice}"</p>
-          </div>
-          <div class="trashContainer>
-            <p>T</p>
-          </div>
+      <li class="cartProductContainer">
+        <div class="cartImgContainer">
+          <img src="${product.imgSrc}" alt="${product.name}">
+        </div>
+        <div class="cartTextContainer">
+          <p>${product.name}</p>
+          <p>$${product.discountPrice} x ${product.quantity} $${product.originalPrice}</p>
+        </div>
+        <div class="trashContainer">
+          <img src="./images/icon-delete.svg"> 
         </div>
       </li>
     `
   })
 }
-
-renderProductsToCart();
-
 
 const carouselContainerEl = document.querySelector('.carouselContainer');
 carouselContainerEl.style.display = 'none';
