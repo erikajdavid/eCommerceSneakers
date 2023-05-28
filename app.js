@@ -122,9 +122,43 @@ function addToCart() {
 
 addToCart();
 
-//when add to cart button is clicked,
-//update cart icon number
-//render product in cart 
+//render items to cart
+
+//create object to render in the cart
+const products = [
+  {
+      id: 1,
+      name: 'Fall Limited Edition Sneakers',
+      discountPrice: 125,
+      originalPrice: 250,
+      imgSrc: "./images/image-product-1.jpg"
+  }
+]
+
+const productsEl = document.querySelector('.productsInCart')
+
+function renderProductsToCart() {
+  products.forEach((product) => {
+    productsEl.innerHTML += `
+      <li>
+        <div class="cartProductContainer>
+          <div class="cartImgContainer">
+            <img src="${product.imgSrc}" alt="${product.name}">
+          </div>
+          <div class="cartTextContainer">
+            <p>"${product.discountPrice}"</p>
+            <p>"${product.originalPrice}"</p>
+          </div>
+          <div class="trashContainer>
+            <p>T</p>
+          </div>
+        </div>
+      </li>
+    `
+  })
+}
+
+renderProductsToCart();
 
 
 const carouselContainerEl = document.querySelector('.carouselContainer');
