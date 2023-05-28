@@ -93,12 +93,12 @@ plusBtnEl.addEventListener('click', function() {
 const minusBtnEl = document.querySelector('.minusBtn')
 
 minusBtnEl.addEventListener('click', function(){
-  let currentQuantity = quantity.textContent;
-  currentQuantity--;
-  quantity.textContent = currentQuantity;
+  productPageQuantity--;
+  quantity.textContent = productPageQuantity;
 
-  if (currentQuantity <= 0) {
+  if (productPageQuantity <= 0) {
     quantity.textContent = 0;
+
   }
 });
 
@@ -132,6 +132,10 @@ function addToCart(id) {
     console.log(userCart);
     updateCart();
   }
+  if (productPageQuantity === 0) {
+      const productInCart = document.querySelector('.cartProductContainer');
+      productInCart.style.display = "none";
+  } //this is to make sure that you cannot add the product to cart if quantity is 0
 }
 
 // Update the cart after adding or changing the quantity
@@ -185,10 +189,9 @@ function renderProductsToCart() {
       </li>
     `;
   })
-
-  trashIt();
 }
 
+//function to remove item from cart
 function trashIt() {
   const trashIcons = document.querySelectorAll('.trashCan');
   trashIcons.forEach((trashIcon) => {
