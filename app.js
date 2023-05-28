@@ -45,17 +45,14 @@ const products = [
     discountPrice: 125,
     originalPrice: 250,
     inCart: false,
-    quantity: 0,
     imgSrc: "./images/image-product-1.jpg",
   }
 ]
 
 // Target the overlay element and save it in a variable
 const overlayEl = document.querySelector('.overlay')
-
 // Target cartReview and save it in a variable
 const cartReviewEl = document.querySelector('.cartReview')
-
 // Target cart and save it in a variable
 const cartEl = document.querySelector('.cart')
 
@@ -75,34 +72,62 @@ closeCartEl.addEventListener('click', function(){
     overlayEl.classList.remove('activated');
 });
 
-// Target + button
+
+//Target plus btn and save in a variable
 const plusBtnEl = document.querySelector('.plusBtn')
 
+//Target quantity element and save in a variable
 const quantity = document.querySelector('.qty');
+
+//Initialize quantity of product on page to 0;
 let productPageQuantity = 0;
 
+//Add event listener to plus btn
 plusBtnEl.addEventListener('click', function() {
   const productId = 1; 
+  //when clicked, increase quantity by 1
   productPageQuantity++;
+  //display new quantity
   quantity.textContent = productPageQuantity;
+
   changeNumberofUnits("plus", productId); 
   calculateTotalQuantity();
 });
 
-// Function to decrease the quantity when - button is pressed
+
+//Target minus btn and save in a variable
 const minusBtnEl = document.querySelector('.minusBtn')
 
+//Add event listener
 minusBtnEl.addEventListener('click', function(){
+  //when clicked, decrease quantity by 1
   productPageQuantity--;
+  //display new quantity on page
   quantity.textContent = productPageQuantity;
 
+  //if quantity on apge is less than 0
   if (productPageQuantity <= 0) {
+    //display 0, no such thing as a negative quanity when shopping for products
     quantity.textContent = 0;
-
   }
 });
 
-// Function to change the number of units
+
+//Target add to cart btn and save in a variable
+const addToCartBtn = document.querySelector('.addToCartBtn');
+
+addToCartBtn.addEventListener('click', function() {
+  const productId = products[0].id; // Assuming you want to add the first product from the array
+  addToCart(productId);
+
+  cartEl.classList.toggle('activated');
+  cartReviewEl.classList.toggle('activated');
+  overlayEl.classList.toggle('activated');
+
+  calculateTotalQuantity();
+});
+
+// FUNCTION TO CHANGE NUMBER OF UNITS
 function changeNumberofUnits(action, id) {
   userCart = userCart.map((item) => {
     if (item.id === id) {
@@ -119,11 +144,12 @@ function changeNumberofUnits(action, id) {
 
 // User cart array to store personal items selected
 let userCart = [];
+//target li and save in a variable
 const productInCart = document.querySelector('.cartProductContainer');
+//target empty cart message and save in a variable
 const emptyCart = document.querySelector('.emptyCart');
 
-
-// Function to add a product to the cart
+// FUNCTION TO ADD ITEM TO CART
 function addToCart(id) {
   if (userCart.some((item) => item.id === id)) {
   } else {
@@ -141,14 +167,20 @@ function addToCart(id) {
   } //this is to make sure that you cannot add the product to cart if quantity is 0
 }
 
-// Update the cart after adding or changing the quantity
+//FUNCTION TO UPDATE CART AFTER ADDING, REMOVING OR CHANGING QUANTITY
 function updateCart() {
   renderProductsToCart();
   calculateTotalQuantity();
   trashIt();
+
+  // Update the cart item number
+  const totalQuantity = calculateTotalQuantity();
+  const cartItemNumber = document.querySelector('.cartItemNumber');
+  cartItemNumber.textContent = totalQuantity.toString();
 }
 
-// Function to calculate the total quantity of items in the cart
+
+//FUNCTION TO CALC THE TOTAL QUANTITY OF ITEMS IN THE CART
 function calculateTotalQuantity() {
   let totalQuantity = 0;
   for (const item of userCart) {
@@ -157,21 +189,7 @@ function calculateTotalQuantity() {
   return totalQuantity;
 }
 
-// Function to handle the add to cart button click
-const addToCartBtn = document.querySelector('.addToCartBtn');
-
-addToCartBtn.addEventListener('click', function() {
-  const productId = products[0].id; // Assuming you want to add the first product from the array
-  addToCart(productId);
-
-  cartEl.classList.toggle('activated');
-  cartReviewEl.classList.toggle('activated');
-  overlayEl.classList.toggle('activated');
-
-  calculateTotalQuantity();
-});
-
-// Function to render the products in the cart
+//FUNCTION TO RENDER PRODUCTS TO CART
 const productsEl = document.querySelector('.productsInCart')
 
 function renderProductsToCart() {
