@@ -6,7 +6,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebas
 
 // TODO: Add SDKs for Firebase products that you want to use
 
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getDatabase, ref, update, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -15,27 +15,18 @@ import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebas
 const firebaseConfig = {
 
   apiKey: "AIzaSyC07Ko7_orRnMwsfTS4CUZqBJqRdAjDcLY",
-
   authDomain: "ecomm-sneakers.firebaseapp.com",
-
   projectId: "ecomm-sneakers",
-
   storageBucket: "ecomm-sneakers.appspot.com",
-
   messagingSenderId: "913809506911",
-
   appId: "1:913809506911:web:c85382d54bc0f7f0af11ea"
 
 };
 
 // Initialize Firebase
-
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const dbRef = ref(database);
-
-//const firebaseObj = push(dbRef, products);
-//console.log(firebaseObj);
 
 // Create object to render in the cart
 const products = [
@@ -44,79 +35,75 @@ const products = [
     name: 'Fall Limited Edition Sneakers',
     discountPrice: 125,
     originalPrice: 250,
-    inCart: false,
     imgSrc: "./images/image-product-1.jpg",
   }
 ]
 
 // Target the overlay element and save it in a variable
-const overlayEl = document.querySelector('.overlay')
+const overlayEl = document.querySelector('.overlay');
 // Target cartReview and save it in a variable
-const cartReviewEl = document.querySelector('.cartReview')
+const cartReviewEl = document.querySelector('.cartReview');
 // Target cart and save it in a variable
-const cartEl = document.querySelector('.cart')
+const cartEl = document.querySelector('.cart');
 
 // Add event listener to cart icon
 cartEl.addEventListener('click', function(){
-    cartEl.classList.toggle('activated');
-    cartReviewEl.classList.toggle('activated');
-    overlayEl.classList.toggle('activated');
+  cartEl.classList.toggle('activated');
+  cartReviewEl.classList.toggle('activated');
+  overlayEl.classList.toggle('activated');
 });
 
 // Target close cart icon and save it in a variable
-const closeCartEl = document.querySelector('.closeIcon')
+const closeCartEl = document.querySelector('.closeIcon');
 
 // Add event listener to close cart icon
 closeCartEl.addEventListener('click', function(){
-    cartReviewEl.classList.remove('activated');
-    overlayEl.classList.remove('activated');
+  cartReviewEl.classList.remove('activated');
+  overlayEl.classList.remove('activated');
 });
 
+// Target plus btn and save in a variable
+const plusBtnEl = document.querySelector('.plusBtn');
 
-//Target plus btn and save in a variable
-const plusBtnEl = document.querySelector('.plusBtn')
-
-//Target quantity element and save in a variable
+// Target quantity element and save in a variable
 const quantity = document.querySelector('.qty');
 
-//Initialize quantity of product on page to 0;
+// Initialize quantity of product on page to 0;
 let productPageQuantity = 0;
 
-//Add event listener to plus btn
+// Add event listener to plus btn
 plusBtnEl.addEventListener('click', function() {
-  const productId = 1; 
-  //when clicked, increase quantity by 1
+  const productId = 1;
+  // When clicked, increase quantity by 1
   productPageQuantity++;
-  //display new quantity
+  // Display new quantity
   quantity.textContent = productPageQuantity;
 
-  changeNumberofUnits("plus", productId); 
+  changeNumberofUnits("plus", productId);
   calculateTotalQuantity();
 });
 
+// Target minus btn and save in a variable
+const minusBtnEl = document.querySelector('.minusBtn');
 
-//Target minus btn and save in a variable
-const minusBtnEl = document.querySelector('.minusBtn')
-
-//Add event listener
+// Add event listener
 minusBtnEl.addEventListener('click', function(){
-  //when clicked, decrease quantity by 1
+  // When clicked, decrease quantity by 1
   productPageQuantity--;
-  //display new quantity on page
+  // Display new quantity on page
   quantity.textContent = productPageQuantity;
 
-  //if quantity on apge is less than 0
+  // If quantity on page is less than 0
   if (productPageQuantity <= 0) {
-    //display 0, no such thing as a negative quanity when shopping for products
+    // Display 0, no such thing as a negative quantity when shopping for products
     quantity.textContent = 0;
   }
 });
 
-
-//Target add to cart btn and save in a variable
+// Target add to cart btn and save in a variable
 const addToCartBtn = document.querySelector('.addToCartBtn');
 
-addToCartBtn.addEventListener('click', function() {
+addToCartBtn.addEventListener('click', function(event) {
   const productId = products[0].id; // Assuming you want to add the first product from the array
   addToCart(productId);
 
@@ -144,30 +131,35 @@ function changeNumberofUnits(action, id) {
 
 // User cart array to store personal items selected
 let userCart = [];
-//target li and save in a variable
+// Target li and save in a variable
 const productInCart = document.querySelector('.cartProductContainer');
-//target empty cart message and save in a variable
+// Target empty cart message and save in a variable
 const emptyCart = document.querySelector('.emptyCart');
 
 // FUNCTION TO ADD ITEM TO CART
 function addToCart(id) {
   if (userCart.some((item) => item.id === id)) {
+    // Item already exists in the cart
   } else {
     const item = products.find((product) => product.id === id);
     userCart.push({
       ...item,
-      numberOfUnits: productPageQuantity, // Use the productPageQuantity as the initial numberOfUnits
+      numberOfUnits: productPageQuantity,
     });
     emptyCart.style.display = "none";
     console.log(userCart);
     updateCart();
+
+    // Save the user's cart to the database
+    const cartData = { userCart };
+    update(dbRef, cartData);
   }
   if (productPageQuantity === 0) {
-      productInCart.style.display = "none";
-  } //this is to make sure that you cannot add the product to cart if quantity is 0
+    productInCart.style.display = "none";
+  }
 }
 
-//FUNCTION TO UPDATE CART AFTER ADDING, REMOVING OR CHANGING QUANTITY
+// FUNCTION TO UPDATE CART AFTER ADDING, REMOVING OR CHANGING QUANTITY
 function updateCart() {
   renderProductsToCart();
   calculateTotalQuantity();
@@ -179,8 +171,7 @@ function updateCart() {
   cartItemNumber.textContent = totalQuantity.toString();
 }
 
-
-//FUNCTION TO CALC THE TOTAL QUANTITY OF ITEMS IN THE CART
+// FUNCTION TO CALCULATE THE TOTAL QUANTITY OF ITEMS IN THE CART
 function calculateTotalQuantity() {
   let totalQuantity = 0;
   for (const item of userCart) {
@@ -189,8 +180,8 @@ function calculateTotalQuantity() {
   return totalQuantity;
 }
 
-//FUNCTION TO RENDER PRODUCTS TO CART
-const productsEl = document.querySelector('.productsInCart')
+// FUNCTION TO RENDER PRODUCTS TO CART
+const productsEl = document.querySelector('.productsInCart');
 
 function renderProductsToCart() {
   productsEl.innerHTML = ''; // Clear the cart element
@@ -209,19 +200,29 @@ function renderProductsToCart() {
         </div>
       </li>
     `;
-  })
+  });
 }
 
-//function to remove item from cart
+// FUNCTION TO REMOVE ENTIRE PRODUCT FROM CART
 function trashIt() {
   const trashIcons = document.querySelectorAll('.trashCan');
   trashIcons.forEach((trashIcon) => {
     trashIcon.addEventListener('click', function() {
       const productInCart = document.querySelector('.cartProductContainer');
       productInCart.style.display = "none";
-    })
-  })
+    });
+  });
 }
+
+// Listen for changes in the user's cart data
+onValue(dbRef, (snapshot) => {
+  const data = snapshot.val();
+  if (data && data.userCart) {
+    userCart = data.userCart;
+    updateCart();
+  }
+});
+
 
 
 
