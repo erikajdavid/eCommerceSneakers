@@ -100,11 +100,23 @@ const addToCartBtn = document.querySelector('.addToCartBtn');
 
 const cartItemNumber = document.querySelector('.cartItemNumber');
 
+const emptyCart = document.querySelector('.emptyCart');
+
 function addToCart() {
   addToCartBtn.addEventListener('click', function(){
-    let currentQuantity = cartItemNumber.textContent;
-    currentQuantity = quantity.textContent;
-    cartItemNumber.textContent = currentQuantity;
+    let currentCartItemQuantity = parseInt(cartItemNumber.textContent);
+    let productQuantity = parseInt(quantity.textContent);
+    
+    currentCartItemQuantity += productQuantity;
+    cartItemNumber.textContent = currentCartItemQuantity;
+    
+    cartEl.classList.toggle('activated');
+    cartReviewEl.classList.toggle('activated');
+    overlayEl.classList.toggle('activated');
+
+    if (currentCartItemQuantity > 0) {
+      emptyCart.style.display = "none";
+    }
   })
 }
 
