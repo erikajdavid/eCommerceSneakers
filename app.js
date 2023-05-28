@@ -67,7 +67,7 @@ const plusBtnEl = document.querySelector('.plusBtn')
 
 const quantity = document.querySelector('.qty');
 
-function addToCart() {
+function addQuantity() {
   plusBtnEl.addEventListener('click', function(){
     let currentQuantity = quantity.textContent;
     currentQuantity++;
@@ -75,13 +75,13 @@ function addToCart() {
   });
 };
 
-addToCart();
+addQuantity();
 
 //function to remove item from cart from product page
 //when - btn is pressed, qty--, product is removed from the cart the the cart item number--
 const minusBtnEl = document.querySelector('.minusBtn')
 
-function removeFromCart() {
+function removeQuantity() {
   minusBtnEl.addEventListener('click', function(){
     let currentQuantity = quantity.textContent;
     currentQuantity--;
@@ -92,7 +92,27 @@ function removeFromCart() {
   });
 }
 
-removeFromCart();
+removeQuantity();
+
+//function to add to cart button
+
+const addToCartBtn = document.querySelector('.addToCartBtn');
+
+const cartItemNumber = document.querySelector('.cartItemNumber');
+
+function addToCart() {
+  addToCartBtn.addEventListener('click', function(){
+    let currentQuantity = cartItemNumber.textContent;
+    currentQuantity = quantity.textContent;
+    cartItemNumber.textContent = currentQuantity;
+  })
+}
+
+addToCart();
+
+//when add to cart button is clicked,
+//update cart icon number
+//render product in cart 
 
 
 const carouselContainerEl = document.querySelector('.carouselContainer');
