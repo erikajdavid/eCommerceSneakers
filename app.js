@@ -1,43 +1,174 @@
 
 
-  // Import the functions you need from the SDKs you need
+// Import the functions you need from the SDKs you need
 
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 
-  // TODO: Add SDKs for Firebase products that you want to use
+// TODO: Add SDKs for Firebase products that you want to use
 
-  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
-  // https://firebase.google.com/docs/web/setup#available-libraries
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-  // Your web app's Firebase configuration
+// Your web app's Firebase configuration
 
-  const firebaseConfig = {
+const firebaseConfig = {
 
-    apiKey: "AIzaSyC07Ko7_orRnMwsfTS4CUZqBJqRdAjDcLY",
+  apiKey: "AIzaSyC07Ko7_orRnMwsfTS4CUZqBJqRdAjDcLY",
 
-    authDomain: "ecomm-sneakers.firebaseapp.com",
+  authDomain: "ecomm-sneakers.firebaseapp.com",
 
-    projectId: "ecomm-sneakers",
+  projectId: "ecomm-sneakers",
 
-    storageBucket: "ecomm-sneakers.appspot.com",
+  storageBucket: "ecomm-sneakers.appspot.com",
 
-    messagingSenderId: "913809506911",
+  messagingSenderId: "913809506911",
 
-    appId: "1:913809506911:web:c85382d54bc0f7f0af11ea"
+  appId: "1:913809506911:web:c85382d54bc0f7f0af11ea"
 
-  };
+};
 
-  // Initialize Firebase
+// Initialize Firebase
 
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
-  const dbRef = ref(database);
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+const dbRef = ref(database);
 
-  const firebaseObj = push(dbRef, "first push to Firebase");
-  console.log(firebaseObj);
+//create object to render in the cart
+const products = [
+  {
+      id: 1,
+      name: 'Fall Limited Edition Sneakers',
+      discountPrice: 125,
+      originalPrice: 250,
+      inCart: false,
+      quantity: 0,
+      imgSrc: "./images/image-product-1.jpg",
+  }
+]
 
-//pseudocode for cart 
+//const firebaseObj = push(dbRef, products);
+//console.log(firebaseObj);
+
+//function to have cart slide in an out when cart icon is clicked on
+//target the overlay element and save in a variable. 
+const overlayEl = document.querySelector('.overlay')
+//target cartReview and save in a variable
+const cartReviewEl = document.querySelector('.cartReview')
+//target cart and save in a variable
+const cartEl = document.querySelector('.cart')
+//add eventlistener
+cartEl.addEventListener('click', function(){
+    cartEl.classList.toggle('activated');
+    cartReviewEl.classList.toggle('activated');
+    overlayEl.classList.toggle('activated');
+});
+
+//target close cart icon and save in a variable.
+const closeCartEl = document.querySelector('.closeIcon')
+//add eventlisteners
+closeCartEl.addEventListener('click', function(){
+    cartReviewEl.classList.remove('activated');
+    overlayEl.classList.remove('activated')
+});
+
+//when + btn is pressed, qty++, product is rendered in the cart and the cart item number++
+//target + button
+const plusBtnEl = document.querySelector('.plusBtn')
+
+const quantity = document.querySelector('.qty');
+
+plusBtnEl.addEventListener('click', function(){
+  let currentQuantity = quantity.textContent;
+  currentQuantity++;
+  quantity.textContent = currentQuantity;
+
+  addToCart();
+});
+
+//function to remove item from cart from product page
+//when - btn is pressed, qty--, product is removed from the cart the the cart item number--
+const minusBtnEl = document.querySelector('.minusBtn')
+
+minusBtnEl.addEventListener('click', function(){
+  let currentQuantity = quantity.textContent;
+  currentQuantity--;
+  quantity.textContent = currentQuantity;
+  if (currentQuantity <= 0) {
+    quantity.textContent = 0;
+  }
+});
+
+//function to add to cart button
+
+const addToCartBtn = document.querySelector('.addToCartBtn');
+
+addToCartBtn.addEventListener('click', function() {
+  const productId = products[0].id; // Assuming you want to add the first product from the array
+  addToCart(productId);
+
+  cartEl.classList.toggle('activated');
+  cartReviewEl.classList.toggle('activated');
+  overlayEl.classList.toggle('activated');
+});
+
+function addToCart(id) {
+  console.log(id);
+  // Add the logic to find the product with the given id and add it to the cart
+  // Example:
+  const product = products.find(product => product.id === id);
+  if (product) {
+    // Add the product to the cart
+    console.log('Product added to cart:', product);
+    //add onvalue here to listen to a change.
+  }
+}
+
+const productsEl = document.querySelector('.productsInCart')
+
+function renderProductsToCart() {
+  products.forEach((product, index) => {
+    productsEl.innerHTML += `
+      <li class="cartProductContainer">
+        <div class="cartImgContainer">
+          <img src="${product.imgSrc}" alt="${product.name}">
+        </div>
+        <div class="cartTextContainer">
+          <p>${product.name}</p>
+          <p>$${product.discountPrice} x ${product.id} $${product.originalPrice}</p>
+        </div>
+        <div class="trashContainer">
+          <img class="trashCan" src="./images/icon-delete.svg"> 
+        </div>
+      </li>
+    `;
+  })
+}
+
+renderProductsToCart();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+  //pseudocode for cart 
 
 //function to have cart slide in an out when cart icon is clicked on
 //target the overlay element and save in a variable. 
@@ -96,6 +227,7 @@ const emptyCart = document.querySelector('.emptyCart');
 
 const checkoutBtn = document.querySelector('.checkoutBtn');
 
+let userCart = []
 
 function addToCart() {
   addToCartBtn.addEventListener('click', function(){
@@ -173,6 +305,8 @@ function updateCart() {
   renderProductsToCart();
   // Any additional logic or calculations related to updating the cart can be added here
 }
+
+*/
 
 
 
@@ -255,5 +389,6 @@ const closeCarouselEl = document.querySelector('.closeCarousel')
 closeCarouselEl.addEventListener('click', function(){
   carouselContainerEl.style.display = 'none';
 });
+
 
 
