@@ -6,7 +6,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebas
 
 // TODO: Add SDKs for Firebase products that you want to use
 
-import { getDatabase, ref, update, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getDatabase, ref, update, remove, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -126,6 +126,10 @@ function changeNumberofUnits(action, id) {
     }
     return item;
   });
+
+  const cartData = { userCart };
+  update(dbRef, cartData);
+
   updateCart();
 }
 
@@ -169,6 +173,7 @@ function updateCart() {
   const totalQuantity = calculateTotalQuantity();
   const cartItemNumber = document.querySelector('.cartItemNumber');
   cartItemNumber.textContent = totalQuantity.toString();
+
 }
 
 // FUNCTION TO CALCULATE THE TOTAL QUANTITY OF ITEMS IN THE CART
@@ -206,13 +211,30 @@ function renderProductsToCart() {
 // FUNCTION TO REMOVE ENTIRE PRODUCT FROM CART
 function trashIt() {
   const trashIcons = document.querySelectorAll('.trashCan');
-  trashIcons.forEach((trashIcon) => {
+  trashIcons.forEach((trashIcon, index) => {
     trashIcon.addEventListener('click', function() {
       const productInCart = document.querySelector('.cartProductContainer');
       productInCart.style.display = "none";
+
+      // Remove the item from the userCart array
+      userCart.splice(index, 1);
+
+      // Reset the productPageQuantity to 0
+      productPageQuantity = 0;
+
+      // Update the cart in Firebase
+      const cartData = { userCart };
+      update(dbRef, cartData);
+
+      // Update the cart display
+      updateCart();
+
+      console.log('Product removed successfully.');
     });
   });
 }
+
+
 
 // Listen for changes in the user's cart data
 onValue(dbRef, (snapshot) => {
