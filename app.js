@@ -6,7 +6,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebas
 
 // TODO: Add SDKs for Firebase products that you want to use
 
-import { getDatabase, ref, update, remove, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getDatabase, ref, update, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -150,7 +150,6 @@ function addToCart(id) {
       ...item,
       numberOfUnits: productPageQuantity,
     });
-    emptyCart.style.display = "none";
     console.log(userCart);
     updateCart();
 
@@ -174,7 +173,15 @@ function updateCart() {
   const cartItemNumber = document.querySelector('.cartItemNumber');
   cartItemNumber.textContent = totalQuantity.toString();
 
+  // Show emptyCart message if userCart is empty
+  const emptyCart = document.querySelector('.emptyCart');
+  if (userCart.length === 0) {
+    emptyCart.style.display = "block";
+  } else {
+    emptyCart.style.display = "none";
+  }
 }
+
 
 // FUNCTION TO CALCULATE THE TOTAL QUANTITY OF ITEMS IN THE CART
 function calculateTotalQuantity() {
@@ -233,7 +240,6 @@ function trashIt() {
     });
   });
 }
-
 
 
 // Listen for changes in the user's cart data
