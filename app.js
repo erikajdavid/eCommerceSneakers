@@ -1,33 +1,3 @@
-
-
-// Import the functions you need from the SDKs you need
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-
-// TODO: Add SDKs for Firebase products that you want to use
-
-import { getDatabase, ref, update, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
-
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-
-const firebaseConfig = {
-
-  apiKey: "AIzaSyC07Ko7_orRnMwsfTS4CUZqBJqRdAjDcLY",
-  authDomain: "ecomm-sneakers.firebaseapp.com",
-  projectId: "ecomm-sneakers",
-  storageBucket: "ecomm-sneakers.appspot.com",
-  messagingSenderId: "913809506911",
-  appId: "1:913809506911:web:c85382d54bc0f7f0af11ea"
-
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-const dbRef = ref(database);
-
 // Create object to render in the cart
 const products = [
   {
@@ -127,9 +97,6 @@ function changeNumberofUnits(action, id) {
     return item;
   });
 
-  const cartData = { userCart };
-  update(dbRef, cartData);
-
   updateCart();
 }
 
@@ -152,10 +119,6 @@ function addToCart(id) {
     });
     console.log(userCart);
     updateCart();
-
-    // Save the user's cart to the database
-    const cartData = { userCart };
-    update(dbRef, cartData);
   }
   if (productPageQuantity === 0) {
     productInCart.style.display = "none";
@@ -229,10 +192,6 @@ function trashIt() {
       // Reset the productPageQuantity to 0
       productPageQuantity = 0;
 
-      // Update the cart in Firebase
-      const cartData = { userCart };
-      update(dbRef, cartData);
-
       // Update the cart display
       updateCart();
 
@@ -240,16 +199,6 @@ function trashIt() {
     });
   });
 }
-
-
-// Listen for changes in the user's cart data
-onValue(dbRef, (snapshot) => {
-  const data = snapshot.val();
-  if (data && data.userCart) {
-    userCart = data.userCart;
-    updateCart();
-  }
-});
 
 
 
