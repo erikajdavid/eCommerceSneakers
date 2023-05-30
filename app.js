@@ -119,10 +119,10 @@ function trashIt() {
 }
 
 
-
-
-
-
+//to add
+//give minus btn functinality
+//function to remove product from cart
+//function to update cart item number
 
 
 /////////////////////////////////////CAROUSEL//////////////////////////////////////
