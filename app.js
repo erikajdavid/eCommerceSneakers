@@ -1,4 +1,109 @@
-// Create object to render in the cart
+
+const products = [
+  {
+    id: 1,
+    name: "Fall Limited Edition Sneakers",
+    discountedPrice: 125,
+    originalPrice: 250, 
+    inCart: false,
+    imgSrc: "./images/image-product-1.jpg"
+  }
+]
+
+// Target the overlay element and save it in a variable
+const overlayEl = document.querySelector('.overlay');
+// Target cartReview and save it in a variable
+const cartReviewEl = document.querySelector('.cartReview');
+// Target cart and save it in a variable
+const cartEl = document.querySelector('.cart');
+
+// Add event listener to cart icon
+cartEl.addEventListener('click', function(){
+  cartEl.classList.toggle('activated');
+  cartReviewEl.classList.toggle('activated');
+  overlayEl.classList.toggle('activated');
+});
+
+// Target close cart icon and save it in a variable
+const closeCartEl = document.querySelector('.closeIcon');
+
+// Add event listener to close cart icon
+closeCartEl.addEventListener('click', function(){
+  cartReviewEl.classList.remove('activated');
+  overlayEl.classList.remove('activated');
+});
+
+
+// Target quantity element and save it in a variable
+const quantity = document.querySelector('.qty');
+
+// Initialize quantity of product on the page to 0
+let productPageQuantity = 0;
+
+// Target plus button and save it in a variable
+const plusBtnEl = document.querySelectorAll('.plusBtn');
+// Add event listener to plus button
+plusBtnEl.forEach((plusBtn) => {
+  plusBtn.addEventListener('click', function(){
+    // When clicked, increase quantity by 1
+    productPageQuantity++;
+    // Display new quantity
+    quantity.textContent = productPageQuantity;
+  });
+});
+
+let userCart = [];
+
+
+const addToCartBtn = document.querySelectorAll('.addToCartBtn');
+addToCartBtn.forEach((button, index) => {
+  button.addEventListener('click', function(){
+    const productId = products[index].id;
+
+    let existingItem;
+    userCart.forEach((item) => {
+      if (productId === item.productId) {
+        existingItem = item;
+      }
+    });
+
+    if (existingItem) {
+      existingItem.quantity += productPageQuantity;
+    } else {
+      userCart.push({
+        productId: productId,
+        quantity: productPageQuantity,
+      });
+    }
+  });
+});
+
+
+// FUNCTION TO RENDER PRODUCTS TO CART
+const productsEl = document.querySelector('.productsInCart');
+
+function renderProductsToCart() {
+  productsEl.innerHTML = ''; // Clear the cart element
+  userCart.forEach((item) => {
+    productsEl.innerHTML += `
+      <li class="cartProductContainer">
+        <div class="cartImgContainer">
+          <img src="${item.imgSrc}" alt="${item.name}">
+        </div>
+        <div class="cartTextContainer">
+          <p>${item.name}</p>
+          <p>$${item.discountPrice} x ${item.numberOfUnits} $${item.originalPrice}</p>
+        </div>
+        <div class="trashContainer">
+          <img class="trashCan" src="./images/icon-delete.svg"> 
+        </div>
+      </li>
+    `;
+  });
+}
+
+
+/*// Create array with object to render in the cart
 const products = [
   {
     id: 1,
@@ -65,8 +170,9 @@ minusBtnEl.addEventListener('click', function(){
 
   // If quantity on page is less than 0
   if (productPageQuantity <= 0) {
+    productPageQuantity = 0;
     // Display 0, no such thing as a negative quantity when shopping for products
-    quantity.textContent = 0;
+    quantity.textContent = productPageQuantity;
   }
 });
 
@@ -95,6 +201,7 @@ function changeNumberofUnits(action, id) {
       }
     }
     return item;
+
   });
 
   updateCart();
@@ -198,7 +305,7 @@ function trashIt() {
       console.log('Product removed successfully.');
     });
   });
-}
+}*/
 
 
 
@@ -279,6 +386,8 @@ const closeCarouselEl = document.querySelector('.closeCarousel')
 closeCarouselEl.addEventListener('click', function(){
   carouselContainerEl.style.display = 'none';
 });
+
+
 
 
 
