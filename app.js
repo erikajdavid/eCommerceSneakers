@@ -77,9 +77,11 @@ addToCartBtn.forEach((button, index) => {
 
     let existingItem = userCart.find((item) => item.productId === productId);
 
+    //if the item exists and user adds more quantity to the cart, add onto the productPageQuantity
     if (existingItem) {
       existingItem.quantity += productPageQuantity;
     } else {
+      //if the the item doesn't exist, push it to the cart array with this object
       userCart.push({
         productId: productId,
         quantity: productPageQuantity,
@@ -129,7 +131,6 @@ function trashIt() {
       userCart.splice(index, 1);
       // Remove it from display
       cartProductContainer.style.display = "none";
-
       console.log('Product removed successfully.');
 
       updateCart();
@@ -139,8 +140,10 @@ function trashIt() {
 
 const emptyCart = document.querySelector('.emptyCart');
 function updateCart() {
+//if there are no items in the cart array, display empty cart message
 if(userCart.length === 0) {
   emptyCart.style.display = "flex";
+//otherwise, remove the empty cart message
 } else if(userCart.length > 0) {
     emptyCart.style.display = "none";
   }
