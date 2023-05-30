@@ -44,7 +44,7 @@ let productPageQuantity = 0;
 const plusBtnEl = document.querySelectorAll('.plusBtn');
 // Add event listener to plus button
 plusBtnEl.forEach((plusBtn) => {
-  plusBtn.addEventListener('click', function () {
+  plusBtn.addEventListener('click', function() {
     // When clicked, increase quantity by 1
     productPageQuantity++;
     // Display new quantity
@@ -52,6 +52,25 @@ plusBtnEl.forEach((plusBtn) => {
   });
 });
 
+//Target minus button and save it in a variable
+const minusBtnEl = document.querySelectorAll('.minusBtn')
+//add event listener to the plus button
+minusBtnEl.forEach((minusBtn) => {
+  minusBtn.addEventListener('click', function() {
+    // When clicked, decrease quantity by 1
+    productPageQuantity--;
+    //Display new quantity
+    quantity.textContent = productPageQuantity;
+    //If the number is below 0, display number as 0 because user cannot purchase a negative number of items
+    if(productPageQuantity < 0) {
+      productPageQuantity = 0;
+      quantity.textContent = productPageQuantity;
+    }
+  })
+})
+
+
+//Add to cart functionality
 const addToCartBtn = document.querySelectorAll('.addToCartBtn');
 addToCartBtn.forEach((button, index) => {
   button.addEventListener('click', function () {
