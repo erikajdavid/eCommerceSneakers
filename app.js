@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 // TODO: Add SDKs for Firebase products that you want to use
 
-import { getDatabase, ref, update, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getDatabase, ref, push, update, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -20,20 +20,14 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
-const dbRef = ref(database);
+const productsRef = ref(database, 'products');
 
+let products = [];
 
-
-const products = [
-  {
-    id: 1,
-    name: "Fall Limited Edition Sneakers",
-    discountedPrice: 125,
-    originalPrice: 250,
-    inCart: false,
-    imgSrc: "./images/image-product-1.jpg"
-  }
-];
+onValue(productsRef, (data) => {
+  products = data.val();
+  renderProductsToCart(products);
+});
 
 // Target the overlay element and save it in a variable
 const overlayEl = document.querySelector('.overlay');
@@ -96,37 +90,51 @@ minusBtnEl.forEach((minusBtn) => {
   })
 })
 
-//Add to cart functionality
+// Add to cart functionality
 const addToCartBtn = document.querySelectorAll('.addToCartBtn');
-addToCartBtn.forEach((button, index) => {
+addToCartBtn.forEach((button) => {
   button.addEventListener('click', function () {
-
-    //when add to cart btn is clicked, get the cart and overlay to appear
-
+    // When add to cart btn is clicked, get the cart and overlay to appear
     cartEl.classList.toggle('activated');
     cartReviewEl.classList.toggle('activated');
     overlayEl.classList.toggle('activated');
 
-    //if the product page quantity is 0, disable the button so the product doesn't render to the cart with a quantity of 0. 
+    // If the product page quantity is 0, disable the button so the product doesn't render to the cart with a quantity of 0.
     if (productPageQuantity === 0) {
-      addToCartBtn.disabled = true;
+      button.disabled = true;
       return;
     }
 
-    const productId = products[index].id;
+    // Iterate over the objects in the products object
+    Object.values(products).forEach((product) => {
+      const id = product.id;
+      console.log(id);
 
-    let existingItem = userCart.find((item) => item.productId === productId);
+      const updateDatabase = (event) => {
+        
+        //let the database know that they particular animal has been favourited
+        //probably will use update
+        if (event.target.tagName === 'BUTTON') {
+          //use the button's id to create the correct reference in the database
+          const childRef = ref(database, `/products/product${id}`);
+          update(childRef, { inCart:true });
+        }
+      };
 
-    //if the item exists and user adds more quantity to the cart, add onto the productPageQuantity
-    if (existingItem) {
-      existingItem.quantity += productPageQuantity;
-    } else {
-      //if the the item doesn't exist, push it to the cart array with this object
-      userCart.push({
-        productId: productId,
-        quantity: productPageQuantity,
-      });
-    }
+      let existingItem = userCart.find((item) => item.productId === id);
+
+      // If the item exists and the user adds more quantity to the cart, add onto the productPageQuantity
+      if (existingItem) {
+        existingItem.quantity += productPageQuantity;
+      } else {
+        // If the item doesn't exist, push it to the cart array with this object
+        userCart.push({
+          productId: id,
+          quantity: productPageQuantity,
+        });
+      }
+      updateDatabase(event); // Call the updateDatabase function here
+    });
 
     renderProductsToCart();
     console.log(userCart);
@@ -140,8 +148,9 @@ const productsEl = document.querySelector('.productsInCart');
 
 function renderProductsToCart() {
   productsEl.innerHTML = ''; // Clear the cart element
-  userCart.forEach((cartItem) => {
-    const product = products.find((item) => item.id === cartItem.productId);
+  Object.values(products).forEach((product) => {
+    const cartItem = userCart.find((item) => item.productId === product.id);
+    if (cartItem) {
     productsEl.innerHTML += `
       <li class="cartProductContainer">
         <div class="cartImgContainer">
@@ -149,13 +158,14 @@ function renderProductsToCart() {
         </div>
         <div class="cartTextContainer">
           <p>${product.name}</p>
-          <p>$${(product.discountedPrice).toFixed(2)} x ${cartItem.quantity} <span>$${(cartItem.quantity * product.discountedPrice).toFixed(2)}</span></p>
+          <p>$${(product.discountPrice).toFixed(2)} x ${cartItem.quantity} <span>$${(cartItem.quantity * product.discountPrice).toFixed(2)}</span></p>
         </div>
         <div class="trashContainer">
           <img class="trashCan" src="./images/icon-delete.svg"> 
         </div>
       </li>
     `;
+    }
   });
   trashIt();
 }
@@ -167,13 +177,25 @@ function trashIt() {
     const cartProductContainer = document.querySelectorAll('.cartProductContainer')[index];
 
     trashCan.addEventListener('click', function() {
+
+       // Iterate over the objects in the products object
+      Object.values(products).forEach((product) => {
+      const id = product.id;
+      console.log(id);
+
+       // Update the database with the new `inCart` value
+      const childRef = ref(database, `/products/product${id}`);
+      update(childRef, { inCart: false });
+
       // Remove the item from the userCart array
       userCart.splice(index, 1);
+
       // Remove it from display
       cartProductContainer.style.display = "none";
       console.log('Product removed successfully.');
 
       updateCart();
+    });
     });
   });
 }
