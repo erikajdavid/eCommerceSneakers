@@ -61,6 +61,7 @@ minusBtnEl.forEach((minusBtn) => {
     productPageQuantity--;
     //Display new quantity
     quantity.textContent = productPageQuantity;
+
     //If the number is below 0, display number as 0 because user cannot purchase a negative number of items
     if(productPageQuantity < 0) {
       productPageQuantity = 0;
@@ -73,6 +74,13 @@ minusBtnEl.forEach((minusBtn) => {
 const addToCartBtn = document.querySelectorAll('.addToCartBtn');
 addToCartBtn.forEach((button, index) => {
   button.addEventListener('click', function () {
+
+    //if the product page quantity is 0, disable the button so the product doesn't render to the cart with a quantity of 0. 
+    if (productPageQuantity === 0) {
+      addToCartBtn.disabled = true;
+      return;
+    }
+
     const productId = products[index].id;
 
     let existingItem = userCart.find((item) => item.productId === productId);
@@ -87,6 +95,7 @@ addToCartBtn.forEach((button, index) => {
         quantity: productPageQuantity,
       });
     }
+
     renderProductsToCart();
     console.log(userCart);
 
@@ -101,7 +110,6 @@ function renderProductsToCart() {
   productsEl.innerHTML = ''; // Clear the cart element
   userCart.forEach((cartItem) => {
     const product = products.find((item) => item.id === cartItem.productId);
-
     productsEl.innerHTML += `
       <li class="cartProductContainer">
         <div class="cartImgContainer">
@@ -138,23 +146,37 @@ function trashIt() {
   });
 }
 
+const totalCartQty = document.querySelector('.cartItemNumber');
+
 const emptyCart = document.querySelector('.emptyCart');
+
 function updateCart() {
-//if there are no items in the cart array, display empty cart message
-if(userCart.length === 0) {
-  emptyCart.style.display = "flex";
-//otherwise, remove the empty cart message
-} else if(userCart.length > 0) {
-    emptyCart.style.display = "none";
+  let totalItems = 0;
+  //calculate the total quantity of items in the cart
+  userCart.forEach((cartItem) => {
+    totalItems +=cartItem.quantity;
+  });
+
+  //update the cartItemNumer element with the total quantity
+    totalCartQty.textContent = totalItems;
+
+  //if there are no items in the cart array, display empty cart message
+  if(userCart.length === 0) {
+    emptyCart.style.display = "flex";
+  //otherwise, remove the empty cart message
+  } else if(userCart.length > 0) {
+      emptyCart.style.display = "none";
+    }
   }
-}
 
 updateCart();
 
 
 
-//to add
-//function to update cart item number
+
+
+
+
 
 
 /////////////////////////////////////CAROUSEL//////////////////////////////////////
