@@ -177,15 +177,10 @@ function trashIt() {
     const cartProductContainer = document.querySelectorAll('.cartProductContainer')[index];
 
     trashCan.addEventListener('click', function() {
-
        // Iterate over the objects in the products object
-      Object.values(products).forEach((product) => {
-      const id = product.id;
-      console.log(id);
-
-       // Update the database with the new `inCart` value
-      const childRef = ref(database, `/products/product${id}`);
-      update(childRef, { inCart: false });
+       Object.values(products).forEach((product) => {
+        const id = product.id;
+        console.log(id);
 
       // Remove the item from the userCart array
       userCart.splice(index, 1);
@@ -194,9 +189,14 @@ function trashIt() {
       cartProductContainer.style.display = "none";
       console.log('Product removed successfully.');
 
+      // Update the database with the new `inCart` value
+      const childRef = ref(database, `/products/product${id}`);
+      update(childRef, { inCart: false });
+
       updateCart();
     });
     });
+
   });
 }
 
