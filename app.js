@@ -76,7 +76,7 @@ addToCartBtn.forEach((button, index) => {
   button.addEventListener('click', function () {
 
     //when add to cart btn is clicked, get the cart and overlay to appear
-    
+
     cartEl.classList.toggle('activated');
     cartReviewEl.classList.toggle('activated');
     overlayEl.classList.toggle('activated');
@@ -153,8 +153,8 @@ function trashIt() {
 }
 
 const totalCartQty = document.querySelector('.cartItemNumber');
-
 const emptyCart = document.querySelector('.emptyCart');
+const checkoutBtn = document.querySelector('.checkoutBtn');
 
 function updateCart() {
   let totalItems = 0;
@@ -169,9 +169,11 @@ function updateCart() {
   //if there are no items in the cart array, display empty cart message
   if(userCart.length === 0) {
     emptyCart.style.display = "flex";
+    checkoutBtn.style.display = "none";
   //otherwise, remove the empty cart message
   } else if(userCart.length > 0) {
       emptyCart.style.display = "none";
+      checkoutBtn.style.display = "flex";
     }
   }
 
