@@ -108,7 +108,6 @@ addToCartBtn.forEach((button) => {
     // Iterate over the objects in the products object
     Object.values(products).forEach((product) => {
       const id = product.id;
-      console.log(id);
 
       const updateDatabase = (event) => {
         
@@ -137,7 +136,6 @@ addToCartBtn.forEach((button) => {
     });
 
     renderProductsToCart();
-    console.log(userCart);
 
     updateCart();
   });
@@ -180,7 +178,6 @@ function trashIt() {
        // Iterate over the objects in the products object
        Object.values(products).forEach((product) => {
         const id = product.id;
-        console.log(id);
 
       // Remove the item from the userCart array
       userCart.splice(index, 1);
