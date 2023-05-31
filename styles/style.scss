@@ -193,18 +193,23 @@ nav ul {
     align-items: center;
 }
 
+span {
+    font-weight: bold;
+    margin-left: 5px;
+}
+
 .checkoutBtn {
     background-color: $orange;
     color: $white;
-    width: 90%;
     border: none;
-    padding: 1rem 0;
+    padding: 1rem 8.25rem ;
     border-radius: 10px;
     font-size: 0.8rem;
     font-weight: 700;
-    letter-spacing: 0.05rem; 
-    text-align: center;
+    letter-spacing: 0.1rem; 
     display: none;
+    font-weight: 500;
+
 }
 
 //body overlay
