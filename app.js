@@ -1,3 +1,29 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+// TODO: Add SDKs for Firebase products that you want to use
+
+import { getDatabase, ref, update, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyC07Ko7_orRnMwsfTS4CUZqBJqRdAjDcLY",
+  authDomain: "ecomm-sneakers.firebaseapp.com",
+  databaseURL: "https://ecomm-sneakers-default-rtdb.firebaseio.com",
+  projectId: "ecomm-sneakers",
+  storageBucket: "ecomm-sneakers.appspot.com",
+  messagingSenderId: "913809506911",
+  appId: "1:913809506911:web:c85382d54bc0f7f0af11ea"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+const dbRef = ref(database);
+
+
+
 const products = [
   {
     id: 1,
