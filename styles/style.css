@@ -393,6 +393,10 @@ span {
   margin-left: 5px;
 }
 
+.trashCan {
+  cursor: pointer;
+}
+
 .checkoutBtn {
   background-color: hsl(26, 100%, 55%);
   color: hsl(0, 0%, 100%);
@@ -404,6 +408,11 @@ span {
   letter-spacing: 0.1rem;
   display: none;
   font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.checkoutBtn:hover {
+  background-color: hsl(26, 99%, 65%);
 }
 
 .overlay {
@@ -697,9 +706,6 @@ footer a {
   font-size: 2rem;
   color: hsl(219, 9%, 45%);
   transition: all 0.25s;
-}
-.closeCarousel:hover {
-  color: hsl(26, 100%, 55%);
 }
 
 /*.thumbnailContainerCarousel {

@@ -198,6 +198,10 @@ span {
     margin-left: 5px;
 }
 
+.trashCan {
+    cursor: pointer;
+}
+
 .checkoutBtn {
     background-color: $orange;
     color: $white;
@@ -209,7 +213,11 @@ span {
     letter-spacing: 0.1rem; 
     display: none;
     font-weight: 500;
-
+    cursor: pointer;
+    transition: all 0.25s;
+    &:hover {
+        background-color: hsl(26, 99%, 65%);
+    }
 }
 
 //body overlay
@@ -509,9 +517,6 @@ footer {
     font-size: 2rem;
     color: $darkGrayBlue;
     transition: all 0.25s;
-    &:hover {
-        color: $orange;
-    }
 }
 
 /*.thumbnailContainerCarousel {
