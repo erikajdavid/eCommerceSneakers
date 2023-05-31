@@ -75,6 +75,12 @@ const addToCartBtn = document.querySelectorAll('.addToCartBtn');
 addToCartBtn.forEach((button, index) => {
   button.addEventListener('click', function () {
 
+    //when add to cart btn is clicked, get the cart and overlay to appear
+    
+    cartEl.classList.toggle('activated');
+    cartReviewEl.classList.toggle('activated');
+    overlayEl.classList.toggle('activated');
+
     //if the product page quantity is 0, disable the button so the product doesn't render to the cart with a quantity of 0. 
     if (productPageQuantity === 0) {
       addToCartBtn.disabled = true;
@@ -117,7 +123,7 @@ function renderProductsToCart() {
         </div>
         <div class="cartTextContainer">
           <p>${product.name}</p>
-          <p>$${product.discountedPrice} x ${cartItem.quantity} $${product.originalPrice}</p>
+          <p>$${(product.discountedPrice).toFixed(2)} x ${cartItem.quantity} <span>$${(cartItem.quantity * product.discountedPrice).toFixed(2)}</span></p>
         </div>
         <div class="trashContainer">
           <img class="trashCan" src="./images/icon-delete.svg"> 
