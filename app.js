@@ -21,12 +21,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const productsRef = ref(database, 'products');
+const cartItemsRef = ref(database, 'cartItems');
 
 let products = [];
 
 onValue(productsRef, (data) => {
-  products = data.val();
-  renderProductsToCart(products);
+  if(data.exists()) {
+    products = data.val();
+    renderProductsToCart(products);
+  }
 });
 
 // Target the overlay element and save it in a variable
@@ -110,28 +113,37 @@ addToCartBtn.forEach((button) => {
       const id = product.id;
 
       const updateDatabase = (event) => {
-        
-        //let the database know that they particular animal has been favourited
-        //probably will use update
+        // Let the database know that a product has been added to the cart.
         if (event.target.tagName === 'BUTTON') {
-          //use the button's id to create the correct reference in the database
+          // Use the button's id to create the correct reference in the database.
           const childRef = ref(database, `/products/product${id}`);
-          update(childRef, { inCart:true });
+          update(childRef, { inCart: true, quantity: productPageQuantity });
         }
       };
 
       let existingItem = userCart.find((item) => item.productId === id);
 
-      // If the item exists and the user adds more quantity to the cart, add onto the productPageQuantity
+      // If the item exists and the user adds more quantity to the cart, add onto the productPageQuantity.
       if (existingItem) {
         existingItem.quantity += productPageQuantity;
+        // Update the quantity in the product object in the products collection.
+        const productRef = ref(database, `/products/product${id}`);
+        update(productRef, { quantity: existingItem.quantity });
       } else {
-        // If the item doesn't exist, push it to the cart array with this object
+        // If the item doesn't exist, push it to the cart array with this object.
         userCart.push({
           productId: id,
           quantity: productPageQuantity,
         });
+
+       /* // Save the cart item to the database.
+        const cartItemRef = ref(database, `/cartItems/${id}`);
+        update(cartItemRef, {
+          productId: id,
+          quantity: productPageQuantity,
+        });*/
       }
+
       updateDatabase(event); // Call the updateDatabase function here
     });
 
@@ -140,6 +152,7 @@ addToCartBtn.forEach((button) => {
     updateCart();
   });
 });
+
 
 // FUNCTION TO RENDER PRODUCTS TO CART
 const productsEl = document.querySelector('.productsInCart');
@@ -189,6 +202,10 @@ function trashIt() {
       // Update the database with the new `inCart` value
       const childRef = ref(database, `/products/product${id}`);
       update(childRef, { inCart: false });
+
+      // Update the database with the 0 quantity when product is trashed
+      const productRef = ref(database, `/products/product${id}`);
+      update(productRef, { quantity: 0 });
 
       updateCart();
     });
