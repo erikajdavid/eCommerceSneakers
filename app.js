@@ -17,20 +17,34 @@ const firebaseConfig = {
   appId: "1:913809506911:web:c85382d54bc0f7f0af11ea"
 };
 
+//function on page load, retrive the info from firebase
+//function to check data in firebase 
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const productsRef = ref(database, 'products');
-const cartItemsRef = ref(database, 'cartItems');
 
 let products = [];
 
+let userCart = [];
+
 onValue(productsRef, (data) => {
-  if(data.exists()) {
+  if (data.exists()) {
     products = data.val();
-    renderProductsToCart(products);
+
+    // Filter the products array to include only products that have inCart set to true
+    const filteredProducts = Object.values(products).filter((product) => product.inCart === true);
+
+    // Update the userCart array with the filtered products
+    userCart = [...filteredProducts];
+    
+    renderProductsToCart(userCart);
+    updateCart();
   }
 });
+
+
 
 // Target the overlay element and save it in a variable
 const overlayEl = document.querySelector('.overlay');
@@ -54,8 +68,6 @@ closeCartEl.addEventListener('click', function(){
   cartReviewEl.classList.remove('activated');
   overlayEl.classList.remove('activated');
 });
-
-let userCart = [];
 
 // Target quantity element and save it in a variable
 const quantity = document.querySelector('.qty');
@@ -147,39 +159,11 @@ addToCartBtn.forEach((button) => {
       updateDatabase(event); // Call the updateDatabase function here
     });
 
-    renderProductsToCart();
+    renderProductsToCart(userCart);
 
     updateCart();
   });
 });
-
-
-// FUNCTION TO RENDER PRODUCTS TO CART
-const productsEl = document.querySelector('.productsInCart');
-
-function renderProductsToCart() {
-  productsEl.innerHTML = ''; // Clear the cart element
-  Object.values(products).forEach((product) => {
-    const cartItem = userCart.find((item) => item.productId === product.id);
-    if (cartItem) {
-    productsEl.innerHTML += `
-      <li class="cartProductContainer">
-        <div class="cartImgContainer">
-          <img src="${product.imgSrc}" alt="${product.name}">
-        </div>
-        <div class="cartTextContainer">
-          <p>${product.name}</p>
-          <p>$${(product.discountPrice).toFixed(2)} x ${cartItem.quantity} <span>$${(cartItem.quantity * product.discountPrice).toFixed(2)}</span></p>
-        </div>
-        <div class="trashContainer">
-          <img class="trashCan" src="./images/icon-delete.svg"> 
-        </div>
-      </li>
-    `;
-    }
-  });
-  trashIt();
-}
 
 // FUNCTION TO REMOVE ENTIRE PRODUCT FROM CART
 function trashIt() {
@@ -190,6 +174,7 @@ function trashIt() {
     trashCan.addEventListener('click', function() {
        // Iterate over the objects in the products object
        Object.values(products).forEach((product) => {
+        console.log(product);
         const id = product.id;
 
       // Remove the item from the userCart array
@@ -213,6 +198,34 @@ function trashIt() {
 
   });
 }
+
+// FUNCTION TO RENDER PRODUCTS TO CART
+const productsEl = document.querySelector('.productsInCart');
+
+function renderProductsToCart(personalCart) {
+  productsEl.innerHTML = ''; // Clear the cart element
+
+  personalCart.forEach((product) => {
+    productsEl.innerHTML += `
+      <li class="cartProductContainer">
+        <div class="cartImgContainer">
+          <img src="${product.imgSrc}" alt="${product.name}">
+        </div>
+        <div class="cartTextContainer">
+          <p>${product.name}</p>
+          <p>$${(product.discountPrice).toFixed(2)} x ${product.quantity} <span>$${(product.quantity * product.discountPrice).toFixed(2)}</span></p>
+        </div>
+        <div class="trashContainer">
+          <img class="trashCan" src="./images/icon-delete.svg"> 
+        </div>
+      </li>
+    `;
+  });
+
+  trashIt();
+}
+
+
 
 const totalCartQty = document.querySelector('.cartItemNumber');
 const emptyCart = document.querySelector('.emptyCart');
