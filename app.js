@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 // TODO: Add SDKs for Firebase products that you want to use
 
-import { getDatabase, ref, push, update, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getDatabase, ref, update, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -147,13 +147,6 @@ addToCartBtn.forEach((button) => {
           productId: id,
           quantity: productPageQuantity,
         });
-
-       /* // Save the cart item to the database.
-        const cartItemRef = ref(database, `/cartItems/${id}`);
-        update(cartItemRef, {
-          productId: id,
-          quantity: productPageQuantity,
-        });*/
       }
 
       updateDatabase(event); // Call the updateDatabase function here
