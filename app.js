@@ -25,26 +25,7 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const productsRef = ref(database, 'products');
 
-let products = [];
-
-let userCart = [];
-
-onValue(productsRef, (data) => {
-  if (data.exists()) {
-    products = data.val();
-
-    // Filter the products array to include only products that have inCart set to true
-    const filteredProducts = Object.values(products).filter((product) => product.inCart === true);
-
-    // Update the userCart array with the filtered products
-    userCart = [...filteredProducts];
-    
-    renderProductsToCart(userCart);
-    updateCart();
-  }
-});
-
-
+console.log(productsRef);
 
 // Target the overlay element and save it in a variable
 const overlayEl = document.querySelector('.overlay');
@@ -68,6 +49,8 @@ closeCartEl.addEventListener('click', function(){
   cartReviewEl.classList.remove('activated');
   overlayEl.classList.remove('activated');
 });
+
+let userCart = [];
 
 // Target quantity element and save it in a variable
 const quantity = document.querySelector('.qty');
@@ -105,58 +88,69 @@ minusBtnEl.forEach((minusBtn) => {
   })
 })
 
-// Add to cart functionality
+//Add to cart functionality
 const addToCartBtn = document.querySelectorAll('.addToCartBtn');
-addToCartBtn.forEach((button) => {
+addToCartBtn.forEach((button, index) => {
   button.addEventListener('click', function () {
-    // When add to cart btn is clicked, get the cart and overlay to appear
+
+    //when add to cart btn is clicked, get the cart and overlay to appear
+
     cartEl.classList.toggle('activated');
     cartReviewEl.classList.toggle('activated');
     overlayEl.classList.toggle('activated');
 
-    // If the product page quantity is 0, disable the button so the product doesn't render to the cart with a quantity of 0.
+    //if the product page quantity is 0, disable the button so the product doesn't render to the cart with a quantity of 0. 
     if (productPageQuantity === 0) {
-      button.disabled = true;
+      addToCartBtn.disabled = true;
       return;
     }
 
-    // Iterate over the objects in the products object
-    Object.values(products).forEach((product) => {
-      const id = product.id;
+    const productId = products[index].id;
 
-      const updateDatabase = (event) => {
-        // Let the database know that a product has been added to the cart.
-        if (event.target.tagName === 'BUTTON') {
-          // Use the button's id to create the correct reference in the database.
-          const childRef = ref(database, `/products/product${id}`);
-          update(childRef, { inCart: true, quantity: productPageQuantity });
-        }
-      };
+    let existingItem = userCart.find((item) => item.productId === productId);
 
-      let existingItem = userCart.find((item) => item.productId === id);
+    //if the item exists and user adds more quantity to the cart, add onto the productPageQuantity
+    if (existingItem) {
+      existingItem.quantity += productPageQuantity;
+    } else {
+      //if the the item doesn't exist, push it to the cart array with this object
+      userCart.push({
+        productId: productId,
+        quantity: productPageQuantity,
+      });
+    }
 
-      // If the item exists and the user adds more quantity to the cart, add onto the productPageQuantity.
-      if (existingItem) {
-        existingItem.quantity += productPageQuantity;
-        // Update the quantity in the product object in the products collection.
-        const productRef = ref(database, `/products/product${id}`);
-        update(productRef, { quantity: existingItem.quantity });
-      } else {
-        // If the item doesn't exist, push it to the cart array with this object.
-        userCart.push({
-          productId: id,
-          quantity: productPageQuantity,
-        });
-      }
-
-      updateDatabase(event); // Call the updateDatabase function here
-    });
-
-    renderProductsToCart(userCart);
+    renderProductsToCart();
+    console.log(userCart);
 
     updateCart();
   });
 });
+
+// FUNCTION TO RENDER PRODUCTS TO CART
+const productsEl = document.querySelector('.productsInCart');
+
+function renderProductsToCart() {
+  productsEl.innerHTML = ''; // Clear the cart element
+  userCart.forEach((cartItem) => {
+    const product = products.find((item) => item.id === cartItem.productId);
+    productsEl.innerHTML += `
+      <li class="cartProductContainer">
+        <div class="cartImgContainer">
+          <img src="${product.imgSrc}" alt="${product.name}">
+        </div>
+        <div class="cartTextContainer">
+          <p>${product.name}</p>
+          <p>$${(product.discountedPrice).toFixed(2)} x ${cartItem.quantity} <span>$${(cartItem.quantity * product.discountedPrice).toFixed(2)}</span></p>
+        </div>
+        <div class="trashContainer">
+          <img class="trashCan" src="./images/icon-delete.svg"> 
+        </div>
+      </li>
+    `;
+  });
+  trashIt();
+}
 
 // FUNCTION TO REMOVE ENTIRE PRODUCT FROM CART
 function trashIt() {
@@ -165,60 +159,16 @@ function trashIt() {
     const cartProductContainer = document.querySelectorAll('.cartProductContainer')[index];
 
     trashCan.addEventListener('click', function() {
-       // Iterate over the objects in the products object
-       Object.values(products).forEach((product) => {
-        console.log(product);
-        const id = product.id;
-
       // Remove the item from the userCart array
       userCart.splice(index, 1);
-
       // Remove it from display
       cartProductContainer.style.display = "none";
       console.log('Product removed successfully.');
 
-      // Update the database with the new `inCart` value
-      const childRef = ref(database, `/products/product${id}`);
-      update(childRef, { inCart: false });
-
-      // Update the database with the 0 quantity when product is trashed
-      const productRef = ref(database, `/products/product${id}`);
-      update(productRef, { quantity: 0 });
-
       updateCart();
     });
-    });
-
   });
 }
-
-// FUNCTION TO RENDER PRODUCTS TO CART
-const productsEl = document.querySelector('.productsInCart');
-
-function renderProductsToCart(personalCart) {
-  productsEl.innerHTML = ''; // Clear the cart element
-
-  personalCart.forEach((product) => {
-    productsEl.innerHTML += `
-      <li class="cartProductContainer">
-        <div class="cartImgContainer">
-          <img src="${product.imgSrc}" alt="${product.name}">
-        </div>
-        <div class="cartTextContainer">
-          <p>${product.name}</p>
-          <p>$${(product.discountPrice).toFixed(2)} x ${product.quantity} <span>$${(product.quantity * product.discountPrice).toFixed(2)}</span></p>
-        </div>
-        <div class="trashContainer">
-          <img class="trashCan" src="./images/icon-delete.svg"> 
-        </div>
-      </li>
-    `;
-  });
-
-  trashIt();
-}
-
-
 
 const totalCartQty = document.querySelector('.cartItemNumber');
 const emptyCart = document.querySelector('.emptyCart');
@@ -323,7 +273,6 @@ const closeCarouselEl = document.querySelector('.closeCarousel')
 closeCarouselEl.addEventListener('click', function(){
   carouselContainerEl.style.display = 'none';
 });
-
 
 
 
