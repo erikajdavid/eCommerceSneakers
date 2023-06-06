@@ -27,6 +27,18 @@ const productsRef = ref(database, 'products');
 
 console.log(productsRef);
 
+let products = [];
+let userCart = [];
+
+// Retrieve data from Firebase and populate the products array
+onValue(productsRef, (data) => {
+  if (data.exists()) {
+    products = data.val();
+
+   renderProductsToCart(products);
+  }
+});
+
 // Target the overlay element and save it in a variable
 const overlayEl = document.querySelector('.overlay');
 // Target cartReview and save it in a variable
@@ -49,8 +61,6 @@ closeCartEl.addEventListener('click', function(){
   cartReviewEl.classList.remove('activated');
   overlayEl.classList.remove('activated');
 });
-
-let userCart = [];
 
 // Target quantity element and save it in a variable
 const quantity = document.querySelector('.qty');
@@ -88,52 +98,63 @@ minusBtnEl.forEach((minusBtn) => {
   })
 })
 
-//Add to cart functionality
-const addToCartBtn = document.querySelectorAll('.addToCartBtn');
-addToCartBtn.forEach((button, index) => {
-  button.addEventListener('click', function () {
 
-    //when add to cart btn is clicked, get the cart and overlay to appear
+// Add to cart functionality
+const addToCartBtn = document.querySelectorAll('.addToCartBtn');
+addToCartBtn.forEach((button) => {
+  button.addEventListener('click', function () {
 
     cartEl.classList.toggle('activated');
     cartReviewEl.classList.toggle('activated');
     overlayEl.classList.toggle('activated');
 
-    //if the product page quantity is 0, disable the button so the product doesn't render to the cart with a quantity of 0. 
+    // If the product page quantity is 0, disable the button so the product doesn't render to the cart with a quantity of 0. 
     if (productPageQuantity === 0) {
-      addToCartBtn.disabled = true;
+      button.disabled = true; // Disable only the clicked button
       return;
     }
 
-    const productId = products[index].id;
+    // Iterate over the objects in the products object
+    Object.values(products).forEach((product) => {
+      const id = product.id;
 
-    let existingItem = userCart.find((item) => item.productId === productId);
+      const updateDatabase = (event) => {
+        if (event.target.tagName === 'BUTTON') {
+          const childRef = ref(database, `/products/product${id}`);
+          update(childRef, { inCart: true, quantity: productPageQuantity });
+        }
+      };
 
-    //if the item exists and user adds more quantity to the cart, add onto the productPageQuantity
-    if (existingItem) {
-      existingItem.quantity += productPageQuantity;
-    } else {
-      //if the the item doesn't exist, push it to the cart array with this object
-      userCart.push({
-        productId: productId,
-        quantity: productPageQuantity,
-      });
-    }
+      let existingItem = userCart.find((item) => item.productId === id);
 
-    renderProductsToCart();
-    console.log(userCart);
+      if (existingItem) {
+        existingItem.quantity += productPageQuantity;
+        const childRef = ref(database, `/products/product${id}`);
+        update(childRef, { quantity: existingItem.quantity });
+      } else {
+        userCart.push({
+          productId: id,
+          quantity: productPageQuantity,
+        });
+      }
+      updateDatabase(event); // Call the updateDatabase function here
+    });
 
-    updateCart();
+    renderProductsToCart(); // Call renderProductsToCart() after updating the userCart array
+    updateCart(); // Call updateCart() after rendering the products
   });
 });
 
-// FUNCTION TO RENDER PRODUCTS TO CART
-const productsEl = document.querySelector('.productsInCart');
-
+// Function to render products to the cart
 function renderProductsToCart() {
+  const productsEl = document.querySelector('.productsInCart');
   productsEl.innerHTML = ''; // Clear the cart element
-  userCart.forEach((cartItem) => {
-    const product = products.find((item) => item.id === cartItem.productId);
+
+  Object.values(products).forEach((product) => {
+    const cartItem = userCart.find((item) => item.productId === product.id);
+    if (cartItem) {
+
+    // Render the product to the cart
     productsEl.innerHTML += `
       <li class="cartProductContainer">
         <div class="cartImgContainer">
@@ -141,61 +162,72 @@ function renderProductsToCart() {
         </div>
         <div class="cartTextContainer">
           <p>${product.name}</p>
-          <p>$${(product.discountedPrice).toFixed(2)} x ${cartItem.quantity} <span>$${(cartItem.quantity * product.discountedPrice).toFixed(2)}</span></p>
+          <p>$${(product.discountPrice).toFixed(2)} x ${cartItem.quantity} <span>$${(cartItem.quantity * product.discountPrice).toFixed(2)}</span></p>
         </div>
         <div class="trashContainer">
           <img class="trashCan" src="./images/icon-delete.svg"> 
         </div>
       </li>
     `;
+    }
   });
-  trashIt();
+
+  trashIt(); // Call the trashIt function to add event listeners to the trash cans
 }
 
-// FUNCTION TO REMOVE ENTIRE PRODUCT FROM CART
+// Function to handle the removal of a product from the cart
 function trashIt() {
   const trashCanEl = document.querySelectorAll('.trashCan');
   trashCanEl.forEach((trashCan, index) => {
-    const cartProductContainer = document.querySelectorAll('.cartProductContainer')[index];
-
     trashCan.addEventListener('click', function() {
+
+       // Iterate over the objects in the products object
+       Object.values(products).forEach((product) => {
+        const id = product.id;
+        console.log(id);
+
+      // Update the inCart property of the corresponding product in the database
+      const childRef = ref(database, `/products/product${id}`);
+      update(childRef, { inCart: false, quantity: 0});
+
       // Remove the item from the userCart array
       userCart.splice(index, 1);
-      // Remove it from display
-      cartProductContainer.style.display = "none";
-      console.log('Product removed successfully.');
 
+      // Render the updated cart and update the cart information
+      renderProductsToCart();
       updateCart();
+
+      console.log('Product removed successfully.');
     });
   });
+})
 }
 
-const totalCartQty = document.querySelector('.cartItemNumber');
-const emptyCart = document.querySelector('.emptyCart');
-const checkoutBtn = document.querySelector('.checkoutBtn');
-
 function updateCart() {
+  const totalCartQty = document.querySelector('.cartItemNumber');
+  const emptyCart = document.querySelector('.emptyCart');
+  const checkoutBtn = document.querySelector('.checkoutBtn');
+
   let totalItems = 0;
-  //calculate the total quantity of items in the cart
+
+  // Calculate the total quantity of items in the cart
   userCart.forEach((cartItem) => {
-    totalItems +=cartItem.quantity;
+    totalItems += cartItem.quantity;
   });
 
-  //update the cartItemNumer element with the total quantity
-    totalCartQty.textContent = totalItems;
+  // Update the cartItemNumber element with the total quantity
+  totalCartQty.textContent = totalItems;
 
-  //if there are no items in the cart array, display empty cart message
-  if(userCart.length === 0) {
+  // Show or hide the empty cart message and checkout button based on the cart contents
+  if (userCart.length === 0) {
     emptyCart.style.display = "flex";
     checkoutBtn.style.display = "none";
-  //otherwise, remove the empty cart message
-  } else if(userCart.length > 0) {
-      emptyCart.style.display = "none";
-      checkoutBtn.style.display = "flex";
-    }
+  } else {
+    emptyCart.style.display = "none";
+    checkoutBtn.style.display = "flex";
   }
+}
 
-updateCart();
 
 
 
