@@ -118,32 +118,29 @@ addToCartBtn.forEach((button) => {
     Object.values(products).forEach((product) => {
       const id = product.id;
 
-      const updateDatabase = (event) => {
-        if (event.target.tagName === 'BUTTON') {
-          const childRef = ref(database, `/products/product${id}`);
-          update(childRef, { inCart: true, quantity: productPageQuantity });
-        }
+      const updateDatabase = () => {
+        const childRef = ref(database, `/products/product${id}`);
+        update(childRef, { inCart: true, quantity: productPageQuantity});
       };
 
       let existingItem = userCart.find((item) => item.productId === id);
 
       if (existingItem) {
-        existingItem.quantity += productPageQuantity;
-        const childRef = ref(database, `/products/product${id}`);
-        update(childRef, { quantity: existingItem.quantity });
+        productPageQuantity = existingItem.quantity += productPageQuantity;
       } else {
         userCart.push({
           productId: id,
           quantity: productPageQuantity,
         });
       }
-      updateDatabase(event); // Call the updateDatabase function here
+      updateDatabase(); // Call the updateDatabase function here
     });
 
     renderProductsToCart(); // Call renderProductsToCart() after updating the userCart array
     updateCart(); // Call updateCart() after rendering the products
   });
 });
+
 
 // Function to render products to the cart
 function renderProductsToCart() {
